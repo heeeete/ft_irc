@@ -4,7 +4,8 @@ CXXFLAGS = -std=c++98 -Wall -Wextra -Wall
 
 NAME = ircserv
 
-SRCS = main.cpp
+SRCS = main.cpp \
+		Server.cpp
 
 # DEPS = ScalarConve
 
