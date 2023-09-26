@@ -126,10 +126,15 @@ void Server::checkSockets(int i)
     struct sockaddr_in clientAddr;
     socklen_t addrLen;
 
-    std::string welcomeMsg = ":server 001 <nickname> :Welcome to the Internet Relay Network <nickname>!\r\n";
-    std::string yourHostMsg = ":server 002 <nickname> :Your host is <servername>, running version <version>\r\n";
-    std::string createdMsg = ":server 003 <nickname> :This server was created <date>\r\n";
-    std::string myInfoMsg = ":server 004 <nickname> :<servername> <version> <available user modes> <available channel modes>\r\n";
+    std::string welcomeMsg = 
+		"       ______                                           ______\r\n"
+		"      /::::::\\      *****************************      /::::::\\\r\n"
+		"      |      |      *    W  E  L  C  O  M  E    *      |      |\r\n"
+		"     @  O  O  @     *                           *     @  O  O  @\r\n"
+		"      |  +   |      *            T O            *      |  +   |\r\n"
+		"       \\ -- /       *                           *       \\ -- /\r\n"
+		"        |  |        *   빡  빡  이   I  R  C    *        |  |    \r\n"
+		"                    *****************************\r\n";
 
     // 위의 문자열에서 <nickname>, <servername>, <version>, <date>, <available user modes>, <available channel modes> 등은 적절한 값으로 대체해야 합니다.
 
@@ -145,9 +150,6 @@ void Server::checkSockets(int i)
                 fcntl(clientSocket, F_SETFL, O_NONBLOCK);
             	std::cout << "connection successful\n";
                 send(clientSocket, welcomeMsg.c_str(), welcomeMsg.length(), 0);
-                send(clientSocket, yourHostMsg.c_str(), yourHostMsg.length(), 0);
-                send(clientSocket, createdMsg.c_str(), createdMsg.length(), 0);
-                send(clientSocket, myInfoMsg.c_str(), myInfoMsg.length(), 0);
                 break;
             }
         }
