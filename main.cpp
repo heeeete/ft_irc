@@ -4,6 +4,8 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <cstring>
+#include <poll.h>
+
 
 int argument_check(char *argv[]){
 	return 0;
@@ -14,12 +16,12 @@ int main(int argc, char* argv[]) {
         std::cout << "Argument ERROR : ./ircserv [PORT] [PASSWORD]\n";
         return -1;
     }
-    argument_check(argv);
+    // argument_check(argv);
     int server_socket, client_socket;
     struct sockaddr_in server_addr, client_addr;
     socklen_t addr_len;
 
-    // 1. 소켓 생성
+    // 1. 서버 소켓 생성
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server_socket == -1) {
         std::cerr << "Server socket creation failed!" << std::endl;
@@ -28,8 +30,8 @@ int main(int argc, char* argv[]) {
 
     // 서버 주소 설정
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(9000); // Port number
-    server_addr.sin_addr.s_addr = INADDR_ANY; // Listen on all interfaces
+    server_addr.sin_port = htons(atoi(argv[1])); // Port number
+    server_addr.sin_addr.s_addr = INADDR_ANY; // 모든 인터페이스에서 듣기
 
     // 2. Bind
     if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
@@ -47,20 +49,57 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "InspIRCd Process ID: " << getpid() << std::endl;
 
-    // 4. Accept
-    addr_len = sizeof(client_addr);
-    client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &addr_len);
-    if (client_socket == -1) {
-        std::cerr << "Accept failed!" << std::endl;
-        close(server_socket);
-        return -1;
+    struct pollfd pollFDs[100];
+    pollFDs[0].fd = server_socket;
+    pollFDs[0].events = POLLIN; // 읽도록 만든다.
+    pollFDs[0].revents = 0; // 처음에는 0으로 초기화 한다(아직 아무 일도 일어나지 않았으니)
+
+    for (int i = 1; i < 100 ; i++)
+        pollFDs[i].fd = -1;
+    while (1)
+    {
+        int result = poll(pollFDs, 100, -1);
+        if (result > 0) {
+            for (int i = 0; i < 100; i++) // 모든 파일 디스크립터를 체크
+            {
+                if (pollFDs[i].revents & POLLIN) // 이벤트가 발생한 소켓
+                {
+                    if (i == 0) // 서버 소켓
+                    {
+                        client_socket = accept(server_socket, (struct sockaddr *)&client_addr, &addr_len);
+                        // 새로운 클라이언트 소켓을 pollFDs 배열에 추가
+                        for (int j = 1; j < 100; j++)
+                        {
+                            if (pollFDs[j].fd == -1)
+                            {
+                                pollFDs[j].fd = client_socket;
+                                pollFDs[j].events = POLLIN;
+                                std::cout << "connection successful\n";
+                                break;
+                            }
+                        }
+                    }
+                    else // 클라이언트 소켓
+                    {
+                        char buffer[1024];
+                        ssize_t bytes_received = recv(pollFDs[i].fd, buffer, sizeof(buffer) - 1, 0);
+                        if (bytes_received <= 0)
+                        {
+                            // 연결 종료 혹은 오류 발생
+                            close(pollFDs[i].fd);
+                            pollFDs[i].fd = -1;
+                        }
+                        else
+                        {
+                            buffer[bytes_received] = '\0'; // 문자열 종료 문자 추가
+                            std::cout << "Received: " << buffer << std::endl;
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    std::cout << "Client connected!" << std::endl;
-
-    // 5. Send message to client
-    const char* msg = "Hello, Client!";
-    send(client_socket, msg, strlen(msg), 0);
 
     // 6. Close sockets and finish
     close(client_socket);
