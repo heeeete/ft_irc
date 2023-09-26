@@ -15,7 +15,7 @@ int argument_check(int argc, char *argv[])
     }
     
     std::string str = argv[1];
-    for (int i = 0; i < str.length(); i++) {
+    for (int i = 0; i < static_cast<int>(str.length()); i++) {
         if (str[i] < '0' || str[i] > '9') {
             std::cout << "Argument ERROR : Wrong port num\n";
             return (-1);
