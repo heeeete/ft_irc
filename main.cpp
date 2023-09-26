@@ -13,7 +13,7 @@ int argument_check(int argc, char *argv[])
         std::cout << "Argument ERROR : ./ircserv [PORT] [PASSWORD]\n";
         return (-1);
     }
-    
+
     std::string str = argv[1];
     for (int i = 0; i < static_cast<int>(str.length()); i++) {
         if (str[i] < '0' || str[i] > '9') {
@@ -34,7 +34,7 @@ int argument_check(int argc, char *argv[])
 int main(int argc, char* argv[]) {
     if (argument_check(argc, argv) == -1)
         return (-1);
-    
+
     int server_socket, client_socket;
     struct sockaddr_in server_addr, client_addr;
     socklen_t addr_len;
@@ -74,6 +74,16 @@ int main(int argc, char* argv[]) {
 
     for (int i = 1; i < 100 ; i++)
         pollFDs[i].fd = -1;
+
+
+    std::string welcomeMsg = ":server 001 <nickname> :Welcome to the Internet Relay Network <nickname>!\r\n";
+    std::string yourHostMsg = ":server 002 <nickname> :Your host is <servername>, running version <version>\r\n";
+    std::string createdMsg = ":server 003 <nickname> :This server was created <date>\r\n";
+    std::string myInfoMsg = ":server 004 <nickname> <servername> <version> <available user modes> <available channel modes>\r\n";
+
+    // 위의 문자열에서 <nickname>, <servername>, <version>, <date>, <available user modes>, <available channel modes> 등은 적절한 값으로 대체해야 합니다.
+
+
     while (1)
     {
         int result = poll(pollFDs, 100, -1);
@@ -93,12 +103,17 @@ int main(int argc, char* argv[]) {
                                 pollFDs[j].fd = client_socket;
                                 pollFDs[j].events = POLLIN;
                                 std::cout << "connection successful\n";
+                                send(client_socket, welcomeMsg.c_str(), welcomeMsg.length(), 0);
+                                send(client_socket, yourHostMsg.c_str(), yourHostMsg.length(), 0);
+                                send(client_socket, createdMsg.c_str(), createdMsg.length(), 0);
+                                send(client_socket, myInfoMsg.c_str(), myInfoMsg.length(), 0);
                                 break;
                             }
                         }
                     }
                     else // 클라이언트 소켓
                     {
+                        std::cout << "클라이언트 이벤트 발생!!\n";
                         char buffer[1024];
                         ssize_t bytes_received = recv(pollFDs[i].fd, buffer, sizeof(buffer) - 1, 0);
                         if (bytes_received <= 0)
