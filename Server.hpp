@@ -33,11 +33,11 @@ class Server
 
 	private:
 
-		int                 serverSocket;
-        struct sockaddr_in  serverAddr;
-        struct pollfd       pollFDs[100];
-        int          		port;
-		std::string         pwd;
+		int                 _serverSocket;
+        struct sockaddr_in  _serverAddr;
+        struct pollfd       _pollFDs[100];
+        int          		_port;
+		std::string         _pwd;
 
 };
 
