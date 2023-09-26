@@ -41,6 +41,4 @@ class Server
 
 };
 
-std::ostream &			operator<<( std::ostream & o, Server const & i );
-
 #endif
