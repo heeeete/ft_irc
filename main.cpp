@@ -7,16 +7,34 @@
 #include <poll.h>
 
 
-int argument_check(char *argv[]){
-	return 0;
+int argument_check(int argc, char *argv[])
+{
+    if (argc != 3) {
+        std::cout << "Argument ERROR : ./ircserv [PORT] [PASSWORD]\n";
+        return (-1);
+    }
+    
+    std::string str = argv[1];
+    for (int i = 0; i < str.length(); i++) {
+        if (str[i] < '0' || str[i] > '9') {
+            std::cout << "Argument ERROR : Wrong port num\n";
+            return (-1);
+        }
+    }
+
+    unsigned int port_num = std::atoi(argv[1]);
+    if (port_num < 0 || port_num > 65535) {
+        std::cout << "Argument ERROR : Out range of port num (0~65535)\n";
+        return (-1);
+    }
+
+	return (0);
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        std::cout << "Argument ERROR : ./ircserv [PORT] [PASSWORD]\n";
-        return -1;
-    }
-    // argument_check(argv);
+    if (argument_check(argc, argv) == -1)
+        return (-1);
+    
     int server_socket, client_socket;
     struct sockaddr_in server_addr, client_addr;
     socklen_t addr_len;
