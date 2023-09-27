@@ -18,10 +18,25 @@ class Channel {
 		std::string						_operatorPassword;
 		std::string						_topic;
 		std::string						_mode;
-		std::string						_channel_password;
-		int								_capacity_limit;
+		std::string						_channelPassword;
+		int								_capacityLimit;
 	public:
 		Channel(const std::string& channelName);
+		~Channel();
+
+		std::map<std::string, Client>	getClientList () const;
+		std::vector<std::string>		getKicked_users () const;
+		std::vector<std::string>		getBanned_users () const;
+		std::vector<std::string>		getOperators () const;
+		std::vector<std::string>		getVoiced_users () const;
+		std::string 					getName () const;
+		std::string						getOperatorPassword () const;
+		std::string						getTopic () const;
+		std::string						getMode () const;
+		std::string						getChannelPassword () const;
+		int								getCapacityLimit () const;
+
+		void							setCapacityLimit(const int Limit);
 };
 
 #endif
