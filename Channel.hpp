@@ -21,7 +21,7 @@ class Channel {
 		std::string						_channel_password;
 		int								_capacity_limit;
 	public:
-
+		Channel(const std::string& channelName);
 };
 
 #endif

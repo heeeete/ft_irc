@@ -18,4 +18,14 @@ bool		Client::getWelecomeSent() const {return _welcomeSent;}
 bool		Client::getHasAllInfo() const {return _hasAllInfo;}
 int			Client::getNbInfo() const {return _nbInfo;}
 
-void		Client::setNickName(const std::string& nickName) {_nickName = nickName;}
+void		Client::setToDeconnect(const bool status) {_toDeconnect = status;}
+void		Client::setNickName(const std::string& str) {_nickName = str;}
+void		Client::setOldNickName(const std::string& str) {_oldNickName = str;};
+void		Client::setUserName(const std::string& str) {_userName = str;};
+void		Client::setRealName(const std::string& str) {_realName = str;};
+void		Client::setMode(const std::string& str) {_mode = str;};
+void		Client::setConnexionPassword(const bool status) {_connexionPassword = status;}
+void		Client::setRegistrationDone(const bool status) {_registrationDone = status;}
+void		Client::setWelecomeSent(const bool status) {_welcomeSent = status;}
+void		Client::setHasAllInfo(const bool status) {_hasAllInfo = status;}
+void		Client::setNbInfo(const int count) {_nbInfo = count;}

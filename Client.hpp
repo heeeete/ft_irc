@@ -39,7 +39,17 @@ class Client {
 		bool			getHasAllInfo() const;
 		int				getNbInfo() const;
 
-		void			setNickName(const std::string& nickName);
+		void			setToDeconnect(const bool status);
+		void			setNickName(const std::string& str);
+		void			setOldNickName(const std::string& str);
+		void			setUserName(const std::string& str);
+		void			setRealName(const std::string& str);
+		void			setMode(const std::string& str);
+		void			setConnexionPassword(const bool status);
+		void			setRegistrationDone(const bool status);
+		void			setWelecomeSent(const bool status);
+		void			setHasAllInfo(const bool status);
+		void			setNbInfo(const int count);
 };
 
 #endif
