@@ -25,6 +25,10 @@ Server &				Server::operator=( Server const & rhs )
 	return *this;
 }
 
+int				Server::getServerSocket() const {return _serverSocket;}
+int				Server::getPort() const {return _port;}
+std::string		Server::getPassword() const {return _pwd;}
+
 int Server::argumentCheck(int argc, char *argv[])
 {
     if (argc != 3) {
@@ -46,6 +50,7 @@ int Server::argumentCheck(int argc, char *argv[])
         return (-1);
     }
 	this->_port = port_num;
+    this->_pwd = argv[2];
 	return (0);
 }
 
