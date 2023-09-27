@@ -15,7 +15,6 @@ class Channel {
 		std::vector<std::string>		_operators;
 		std::vector<std::string>		_voiced_users;
 		std::string 					_name;
-		std::string						_operatorPassword;
 		std::string						_topic;
 		std::string						_mode;
 		std::string						_channelPassword;
@@ -37,6 +36,8 @@ class Channel {
 		int								getCapacityLimit () const;
 
 		void							setCapacityLimit(const int Limit);
+		void							setChannelPassword(const std::string& str);
+		void							setTopic(const std::string& str);
 };
 
 #endif
