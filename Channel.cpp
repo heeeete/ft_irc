@@ -14,4 +14,6 @@ std::string						Channel::getMode () const {return _mode;}
 std::string						Channel::getChannelPassword () const {return _channelPassword;}
 int								Channel::getCapacityLimit () const {return _capacityLimit;}
 
-void							setCapacityLimit(const int Limit)
+void							Channel::setCapacityLimit(const int Limit) {_capacityLimit = Limit;}
+void							Channel::setChannelPassword(const std::string& str) {_channelPassword = str;}
+void							Channel::setTopic(const std::string& str) {_topic = str;}
