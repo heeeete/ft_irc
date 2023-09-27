@@ -5,9 +5,14 @@ CXXFLAGS = -std=c++98 -Wall -Wextra -Wall
 NAME = ircserv
 
 SRCS = main.cpp \
-		Server.cpp
+		Server.cpp \
+		Client.cpp \
+		Channel.cpp
 
-# DEPS = ScalarConve
+DEPS = Server.hpp \
+		Irc.hpp \
+		Client.hpp \
+		Channel.hpp
 
 OBJS = $(SRCS:.cpp=.o)
 

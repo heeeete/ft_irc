@@ -1,8 +1,7 @@
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#include <iostream>
-#include <map>
+#include "Irc.hpp"
 #include "Client.hpp"
 
 class Client;
