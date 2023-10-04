@@ -2,7 +2,6 @@
 #define CLIENT_HPP
 
 #include "Irc.hpp"
-#include "Message.hpp"
 
 class Client {
 	private:
@@ -54,7 +53,7 @@ class Client {
 		void			setNbInfo(const int count);
 
 		void			processBuffer(const std::string& buf);
-		void			executeCmd(Message *msg);
+		// void			executeCmd(Message *msg);
 };
 
 #endif

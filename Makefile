@@ -8,13 +8,31 @@ SRCS = main.cpp \
 		Server.cpp \
 		Client.cpp \
 		Channel.cpp \
-		parsing.cpp
+		parsing.cpp \
+		commands/invite.cpp \
+		commands/join.cpp \
+		commands/kick.cpp \
+		commands/list.cpp \
+		commands/mode.cpp \
+		commands/names.cpp \
+		commands/nick.cpp \
+		commands/notice.cpp \
+		commands/part.cpp \
+		commands/pass.cpp \
+		commands/ping.cpp \
+		commands/pong.cpp \
+		commands/privmsg.cpp \
+		commands/quit.cpp \
+		commands/topic.cpp \
+		commands/user.cpp \
+		commands/whois.cpp \
+		commands/whowas.cpp
 
 DEPS = Server.hpp \
 		Irc.hpp \
 		Client.hpp \
 		Channel.hpp \
-		Message.hpp
+		Message.hpp \
 
 OBJS = $(SRCS:.cpp=.o)
 

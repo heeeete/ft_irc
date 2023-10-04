@@ -1,4 +1,5 @@
 #include "Message.hpp"
+#include "commands.hpp"
 
 Message parseMessage(std::string input) {
 	Message msg;
@@ -80,4 +81,39 @@ void	print_message(const Message& msg)
         std::cout << " " << *it << std::endl;
     }
     std::cout << std::endl << std::endl;
+}
+
+void    executeCmd(Message *msg)
+{
+	std::string validCmds[] = {
+		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC", "MODE", "PART",
+		"QUIT", "LIST", "NAMES", "PRIVMSG", "NOTICE", "PING", "PONG", "WHOIS", "WHOWAS"
+	};
+
+	int index = 1;
+
+	while (validCmds[index] != msg->command) {
+		index++;
+	}
+
+	switch(index) {
+		case 1: nick(); break;
+		case 2: user(); break;
+		case 3: pass(); break;
+		case 4: join(); break;
+		case 5: kick(); break;
+		case 6: invite(); break;
+		case 7: topic(); break;
+		case 8: mode(); break;
+		case 9: part(); break;
+		case 10: quit(); break;
+		case 11: list(); break;
+		case 12: names(); break;
+		case 13: privmsg(); break;
+		case 14: notice(); break;
+		case 15: ping(); break;
+		case 16: pong(); break;
+		case 17: whois(); break;
+		case 18: whowas(); break;
+	}
 }

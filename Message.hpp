@@ -11,6 +11,7 @@ typedef struct s_message {
 
 Message		parseMessage(std::string input);
 void		print_message(const Message& msg);
+void			executeCmd(Message *msg);
 // void		printAscii(const std::string& str);
 
 #endif

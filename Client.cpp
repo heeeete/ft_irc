@@ -43,14 +43,45 @@ void		Client::processBuffer(const std::string& buf) {
 		std::string command(token);
 		m = parseMessage(token);
 		print_message(m);
-		execCmd(&m);
+		executeCmd(&m);
 		token = strtok(NULL, END_CHARACTERS);
 	}
 }
 
-void			Client::execCmd(Message *msg)
-{
-}
+// void			Client::executeCmd(Message *msg)
+// {
+// 	std::string validCmds[] = {
+// 		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC", "MODE", "PART",
+// 		"QUIT", "LIST", "NAMES", "PRIVMSG", "NOTICE", "PING", "PONG", "WHOIS", "WHOWAS"
+// 	};
+
+// 	int index = 1;
+
+// 	while (validCmds[index] != msg->command) {
+// 		index++;
+// 	}
+
+// 	switch(index) {
+// 		case 1: nick(); break;
+// 		case 2: user(); break;
+// 		case 3: pass(); break;
+// 		case 4: join(); break;
+// 		case 5: kick(); break;
+// 		case 6: invite(); break;
+// 		case 7: topic(); break;
+// 		case 8: mode(); break;
+// 		case 9: part(); break;
+// 		case 10: quit(); break;
+// 		case 11: list(); break;
+// 		case 12: names(); break;
+// 		case 13: privmsg(); break;
+// 		case 14: notice(); break;
+// 		case 15: ping(); break;
+// 		case 16: pong(); break;
+// 		case 17: whois(); break;
+// 		case 18: whowas(); break;
+// 	}
+// }
 
 void		Client::setToDeconnect(const bool status) {_toDeconnect = status;}
 void		Client::setNickName(const std::string& str) {_nickName = str;}
