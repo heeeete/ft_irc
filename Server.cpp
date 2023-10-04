@@ -132,8 +132,8 @@ void Server::checkSockets(int i)
     struct sockaddr_in clientAddr;
     socklen_t addrLen;
 
+	std::string notRegisterMsg = ":server 451 *\r\n";
     std::string welcomeMsg =
-        ":server 001 <nickname> :Welcome to the Internet Relay Network <nickname>!\r\n"
 		"       ______                                           ______\r\n"
 		"      /::::::\\      *****************************      /::::::\\\r\n"
 		"      |      |      *    W  E  L  C  O  M  E    *      |      |\r\n"
@@ -156,6 +156,7 @@ void Server::checkSockets(int i)
                 setPollFd(j, clientSocket, POLLIN, 0);
                 fcntl(clientSocket, F_SETFL, O_NONBLOCK);
             	std::cout << "connection successful\n";
+				send(clientSocket, notRegisterMsg.c_str(), notRegisterMsg.length(), 0);
                 send(clientSocket, welcomeMsg.c_str(), welcomeMsg.length(), 0);
                 break;
             }
