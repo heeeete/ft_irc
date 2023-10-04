@@ -27,6 +27,8 @@ class Server
 		int				getServerSocket() const;
 		int				getPort() const;
 		std::string		getPassword() const;
+		std::string		getName() const;
+		time_t const*	getStartTime() const;
 
 	private:
 
@@ -35,6 +37,8 @@ class Server
         struct pollfd       _pollFDs[100];
         int          		_port;
 		std::string         _pwd;
+		std::string			_name;
+		time_t				_startTime;
 		std::map<int , Client *>	_clientsList;
 
 };

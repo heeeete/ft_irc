@@ -1,8 +1,11 @@
 #ifndef COMMANDS_HPP
 # define COMMANDS_HPP
 
+#include "Client.hpp"
+
 void    nick();
-void    user();
+void    user(Client &client, Message *msg);
+void    welcomeMsg(Client &client);
 void    pass();
 void    join();
 void    kick();

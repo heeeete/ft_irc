@@ -20,6 +20,7 @@
 # include <string>
 # include <cerrno>
 # include <ctime>
+# include <time.h>
 # include <fcntl.h>
 
 // # include "Macro.hpp"

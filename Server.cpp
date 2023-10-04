@@ -1,7 +1,7 @@
 #include "Server.hpp"
 #include "Client.hpp"
 
-Server::Server()
+Server::Server(): _name("PPL ft_irc")
 {
 }
 
@@ -22,6 +22,8 @@ Server &				Server::operator=( Server const & rhs )
         this->_serverAddr = rhs._serverAddr;
         this->_port = rhs._port;
         this->_pwd = rhs._pwd;
+        this->_name = rhs._name;
+        this->_startTime = rhs._startTime;
 	}
 	return *this;
 }
@@ -29,6 +31,8 @@ Server &				Server::operator=( Server const & rhs )
 int				Server::getServerSocket() const {return _serverSocket;}
 int				Server::getPort() const {return _port;}
 std::string		Server::getPassword() const {return _pwd;}
+std::string     Server::getName() const {return _name;}
+time_t const*	Server::getStartTime() const { return &_startTime;}
 
 int Server::argumentCheck(int argc, char *argv[])
 {
@@ -64,6 +68,8 @@ void	Server::setPollFd(int index, int fd, int events, int revents)
 
 int Server::setServerSocket()
 {
+    time(&_startTime);
+
     // 1. 서버 소켓 생성
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (_serverSocket == -1) {
@@ -134,10 +140,6 @@ void Server::checkSockets(int i)
 
 	std::string notRegisterMsg = ":server 451 *\r\n";
     std::string welcomeMsg =
-        ":server 001 <nick> :Welcome to the Internet Relay Network <nick>!<user>@<host>\r\n"
-        ":server 002 <nick> :Your host is <servername>, running version <ver>\r\n"
-        ":server 003 <nick> :This server was created <date>\r\n"
-        ":server 004 <nick> :<servername> <version> <available user modes> <available channel modes>\r\n"
 		"       ______                                           ______\r\n"
 		"      /::::::\\      *****************************      /::::::\\\r\n"
 		"      |      |      *    W  E  L  C  O  M  E    *      |      |\r\n"
@@ -155,7 +157,7 @@ void Server::checkSockets(int i)
         {
             if (_pollFDs[j].fd == -1)
             {
-                Client *client = new Client(clientSocket); // 새로운 클라이언트 생성
+                Client *client = new Client(clientSocket, this); // 새로운 클라이언트 생성
                 _clientsList.insert(std::pair<int , Client *>(client->getClientSocket(), client));
                 setPollFd(j, clientSocket, POLLIN, 0);
                 fcntl(clientSocket, F_SETFL, O_NONBLOCK);
