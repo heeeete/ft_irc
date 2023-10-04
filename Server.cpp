@@ -33,6 +33,8 @@ int				Server::getPort() const {return _port;}
 std::string		Server::getPassword() const {return _pwd;}
 std::string     Server::getName() const {return _name;}
 time_t const*	Server::getStartTime() const { return &_startTime;}
+std::map<int, Client *>& Server::getClientsList() {return _clientsList;}
+struct pollfd*	Server::getPollFDs() {return _pollFDs;}
 
 int Server::argumentCheck(int argc, char *argv[])
 {
@@ -96,7 +98,7 @@ int Server::setServerSocket()
         return -1;
     }
 
-	std::cout << "InspIRCd Process ID: " << getpid() << std::endl;
+	std::cout << "Process ID: " << getpid() << std::endl;
 
 	setPollFd(0, _serverSocket, POLLIN, 0);
 
@@ -138,16 +140,6 @@ void Server::checkSockets(int i)
     struct sockaddr_in clientAddr;
     socklen_t addrLen;
 
-	std::string notRegisterMsg = ":server 451 *\r\n";
-    std::string welcomeMsg =
-		"       ______                                           ______\r\n"
-		"      /::::::\\      *****************************      /::::::\\\r\n"
-		"      |      |      *    W  E  L  C  O  M  E    *      |      |\r\n"
-		"     @  O  O  @     *                           *     @  O  O  @\r\n"
-		"      |  +   |      *            T O            *      |  +   |\r\n"
-		"       \\ -- /       *                           *       \\ -- /\r\n"
-		"        |  |        *   빡  빡  이   I  R  C    *        |  |    \r\n"
-		"                    *****************************\r\n";
 	if (i == 0) // 서버 소켓
     {
         int clientSocket = accept(_serverSocket, (struct sockaddr *)&clientAddr, &addrLen);
@@ -160,10 +152,9 @@ void Server::checkSockets(int i)
                 Client *client = new Client(clientSocket, this); // 새로운 클라이언트 생성
                 _clientsList.insert(std::pair<int , Client *>(client->getClientSocket(), client));
                 setPollFd(j, clientSocket, POLLIN, 0);
+				client->setPollFDsIdx(j);
                 fcntl(clientSocket, F_SETFL, O_NONBLOCK);
             	std::cout << "connection successful\n";
-				send(clientSocket, notRegisterMsg.c_str(), notRegisterMsg.length(), 0);
-                send(clientSocket, welcomeMsg.c_str(), welcomeMsg.length(), 0);
                 break;
             }
         }
@@ -176,6 +167,7 @@ void Server::checkSockets(int i)
         if (bytes_received <= 0)
         {
             // 연결 종료 혹은 오류 발생
+			// _clientsList에서도 빼주기 
             close(_pollFDs[i].fd);
             _pollFDs[i].fd = -1;
         }

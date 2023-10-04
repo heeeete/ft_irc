@@ -19,6 +19,17 @@ bool	validNickName(std::string nickname)
 void    nick(Client &client, Message *msg) {
 	std::string m;
 
+	if (!client.getConnectionPassword())
+	{
+		client.setCorrectPwd(false);
+		client.sendMsg(client.getClientSocket(), ERR_PASSWDMISMATCH);
+		close(client.getClientSocket()); //소켓 닫기 
+		client.getServer().getClientsList().erase(client.getClientSocket()); //clientsList에서 해당 소켓 지우기
+		client.getServer().getPollFDs()[client.getPollFDsIdx()].fd = -1; //pollFDs에서 fd 지우기
+		return ;
+	}
+	if (!client.getCorrectPwd())
+		return ;
 	if (msg->params.empty()) client.sendMsg(client.getClientSocket(), ERR_NONICKNAMEGIVEN(client.getNickName()));
 	else if (!validNickName(msg->params[0])) client.sendMsg(client.getClientSocket(), ERR_ERRONEUSNICKNAME(client.getNickName(), msg->params[0]));
 	else {

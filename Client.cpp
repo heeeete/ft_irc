@@ -1,5 +1,6 @@
 #include "Client.hpp"
 #include "commands.hpp"
+#include "DefineReplies.hpp"
 
 Client::Client(int clientSocket, Server *s): _clientSocket(clientSocket), _server(s) {}
 Client::~Client(){}
@@ -14,13 +15,17 @@ std::string	Client::getUserName() const {return _userName;}
 std::string	Client::getRealName() const { return _realName;}
 std::string Client::getHostName() const { return _hostName;}
 std::string	Client::getMode() const {return _mode;}
-bool		Client::getConnexionPassword() const {return _connexionPassword;}
+bool		Client::getConnectionPassword() const {return _connectionPassword;}
 bool		Client::getRegistrationDone() const {return _registrationDone;}
 bool		Client::getWelecomeSent() const {return _welcomeSent;}
 bool		Client::getHasAllInfo() const {return _hasAllInfo;}
 int			Client::getNbInfo() const {return _nbInfo;}
-Server		Client::getServer() const {return *_server;}
+Server&		Client::getServer() const {return *_server;}
+int			Client::getPollFDsIdx() const {return _pollfds_idx;}
+bool		Client::getCorrectPwd() const {return _correctPwd;}
 
+void		Client::setPollFDsIdx(const int idx) {_pollfds_idx = idx;}
+void		Client::setCorrectPwd(const bool isCorrect) {_correctPwd = isCorrect;}
 void		Client::setReadBuf(const std::string buf) {
 	_readBuf += buf;
 
@@ -58,6 +63,14 @@ void    Client::executeCmd(Message *msg)
 		"QUIT", "LIST", "NAMES", "PRIVMSG", "NOTICE", "PING", "PONG", "WHOIS", "WHOWAS"
 	};
 
+	if (msg->command == "CAP")
+	{
+		sendMsg(_clientSocket, ERR_NOTREGISTERED);
+		setCorrectPwd(true);
+		_connectionPassword = false;
+		return ;
+	}
+
 	int index = 0;
 	while (index < 18 && validCmds[index] != msg->command) {
 		index++;
@@ -66,7 +79,7 @@ void    Client::executeCmd(Message *msg)
 	switch(index) {
 		case 0: nick(*this, msg); break;
 		case 1: user(*this, msg); break;
-		case 2: pass(); break;
+		case 2: pass(*this, msg); break;
 		case 3: join(); break;
 		case 4: kick(); break;
 		case 5: invite(); break;
@@ -92,7 +105,7 @@ void		Client::setUserName(const std::string& str) {_userName = str;}
 void		Client::setRealName(const std::string& str) {_realName = str;}
 void		Client::setHostName(const std::string& str) {_hostName = str;}
 void		Client::setMode(const std::string& str) {_mode = str;};
-void		Client::setConnexionPassword(const bool status) {_connexionPassword = status;}
+void		Client::setConnectionPassword(const bool status) {_connectionPassword = status;}
 void		Client::setRegistrationDone(const bool status) {_registrationDone = status;}
 void		Client::setWelecomeSent(const bool status) {_welcomeSent = status;}
 void		Client::setHasAllInfo(const bool status) {_hasAllInfo = status;}

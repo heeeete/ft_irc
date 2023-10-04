@@ -7,11 +7,25 @@
 # define RPL_CREATED(nick, _startTime)                        ":PPL_IRC 003 " + nick + " :This server was created " + _startTime + "\r\n"
 # define RPL_MYINFO(nick, servername, version, channelModes, userModes) ":PPL_IRC 004 " + nick + " :" + servername + " " + version + " " + channelModes + " " + userModes + "\r\n"
 
+/*MOTD*/
+# define RPL_MOTDSTART(nick)							":PPL_IRC 375 " + nick + " :Message of the day\r\n"
+# define RPL_MOTD(nick)									":PPL_IRC 372 " + nick + " :" + \
+														"       ______                                           ______\r\n" + \
+														"      /::::::\\      *****************************      /::::::\\\r\n" + \
+														"      |      |      *    W  E  L  C  O  M  E    *      |      |\r\n" + \
+														"     @  O  O  @     *                           *     @  O  O  @\r\n" + \
+														"      |  +   |      *            T O            *      |  +   |\r\n" + \
+														"       \\ -- /       *                           *       \\ -- /\r\n" + \
+														"        |  |        *   빡  빡  이   I  R  C    *        |  |    \r\n" + \
+														"                    *****************************\r\n"
+# define RPL_ENDOFMOTD(nick)							":PPL_IRC 376 " + nick + " :End of MOTD command\r\n"
 
 /* ERROR */
 # define ERR_NONICKNAMEGIVEN(nick)						":PPL_IRC 431 " + nick + " " + ":No nickname given\r\n"
 # define ERR_ERRONEUSNICKNAME(nick, rejectedNickname)	":PPL_IRC 432 " + nick + " " + rejectedNickname + " :Erroneus nickname\r\n"
+# define ERR_NOTREGISTERED								":PPL_IRC 451 * :You have not registered\r\n"
 # define ERR_NEEDMOREPARAMS(nick, command)			    ":PPL_IRC 461 " + nick + " " + command + " :Not enough parameters\r\n"
 # define ERR_ALREADYREGISTRED(nick)                     ":PPL_IRC 462 " + nick + " :Unauthorized command (already registered)\r\n"
+# define ERR_PASSWDMISMATCH								":PPL_IRC 464 * :Password incorrect\r\n"
 
 #endif

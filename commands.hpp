@@ -6,7 +6,7 @@
 void    nick(Client &client, Message *msg);
 void    user(Client &client, Message *msg);
 void    welcomeMsg(Client &client);
-void    pass();
+void    pass(Client &client, Message *msg);
 void    join();
 void    kick();
 void    invite();

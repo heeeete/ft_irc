@@ -7,10 +7,15 @@ void    welcomeMsg(Client &client)
 	client.sendMsg(client.getClientSocket(), RPL_YOURHOST(client.getNickName(), client.getServer().getName(), "1.0"));
 	client.sendMsg(client.getClientSocket(), RPL_CREATED(client.getNickName(), ctime(client.getServer().getStartTime())));
 	client.sendMsg(client.getClientSocket(), RPL_MYINFO(client.getNickName(), client.getServer().getName(), "1.0", "Channel modes +ntikl", ""));
+	client.sendMsg(client.getClientSocket(), RPL_MOTDSTART(client.getNickName()));
+	client.sendMsg(client.getClientSocket(), RPL_MOTD(client.getNickName()));
+	client.sendMsg(client.getClientSocket(), RPL_ENDOFMOTD(client.getNickName()));
 }
 
 void    user(Client &client, Message *msg)
 {
+	if (!client.getCorrectPwd())
+		return ;
     if (msg->params.size() < 4)
         client.sendMsg(client.getClientSocket(), ERR_NEEDMOREPARAMS(client.getNickName(), msg->command));
     if (client.getRegistrationDone())

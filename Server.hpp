@@ -29,6 +29,8 @@ class Server
 		std::string		getPassword() const;
 		std::string		getName() const;
 		time_t const*	getStartTime() const;
+		struct pollfd*	getPollFDs();
+		std::map<int, Client *>& getClientsList();
 
 	private:
 
