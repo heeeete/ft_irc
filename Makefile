@@ -1,6 +1,7 @@
 CXX = c++
 
-CXXFLAGS = -std=c++98 -Wall -Wextra -Wall
+CXXFLAGS = -std=c++98
+OPT			= -g
 
 NAME = ircserv
 
@@ -32,14 +33,14 @@ DEPS = Server.hpp \
 		Irc.hpp \
 		Client.hpp \
 		Channel.hpp \
-		Message.hpp \
+		Message.hpp
 
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS) $(DEPS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME) $(OPT)
 
 clean:
 	rm -f $(OBJS)
