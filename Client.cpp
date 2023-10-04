@@ -18,6 +18,34 @@ bool		Client::getWelecomeSent() const {return _welcomeSent;}
 bool		Client::getHasAllInfo() const {return _hasAllInfo;}
 int			Client::getNbInfo() const {return _nbInfo;}
 
+void		Client::setReadBuf(const std::string buf) {
+	_readBuf += buf;
+
+	if (_readBuf.find(END_CHARACTERS) != std::string::npos )
+	{
+		processBuffer(_readBuf);
+		_readBuf.clear();
+	}
+}
+
+void		Client::processBuffer(const std::string& buf) {
+	Message	m;
+
+	if (buf.find_first_of(VALID_CHARACTERS) == std::string::npos)
+		return ;
+
+	std::cout << "BUF = " << buf << "\n";
+	char	*token = strtok(const_cast<char *>(buf.c_str()), END_CHARACTERS);
+	std::cout << "token = " << token << "\n";
+	if (token == NULL)
+		return ;
+	while(token != NULL) {
+		std::string command(token);
+		m = parseMessage(token);
+		print_message(m);
+		token = strtok(NULL, END_CHARACTERS);
+	}
+}
 void		Client::setToDeconnect(const bool status) {_toDeconnect = status;}
 void		Client::setNickName(const std::string& str) {_nickName = str;}
 void		Client::setOldNickName(const std::string& str) {_oldNickName = str;};

@@ -2,6 +2,7 @@
 #define CLIENT_HPP
 
 #include "Irc.hpp"
+#include "Message.hpp"
 
 class Client {
 	private:
@@ -39,6 +40,7 @@ class Client {
 		bool			getHasAllInfo() const;
 		int				getNbInfo() const;
 
+		void			setReadBuf(const std::string buf);
 		void			setToDeconnect(const bool status);
 		void			setNickName(const std::string& str);
 		void			setOldNickName(const std::string& str);
@@ -50,6 +52,8 @@ class Client {
 		void			setWelecomeSent(const bool status);
 		void			setHasAllInfo(const bool status);
 		void			setNbInfo(const int count);
+
+		void			processBuffer(const std::string& buf);
 };
 
 #endif
