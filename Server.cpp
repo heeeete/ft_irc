@@ -146,7 +146,6 @@ void Server::checkSockets(int i)
 		"       \\ -- /       *                           *       \\ -- /\r\n"
 		"        |  |        *   빡  빡  이   I  R  C    *        |  |    \r\n"
 		"                    *****************************\r\n";
-
 	if (i == 0) // 서버 소켓
     {
         int clientSocket = accept(_serverSocket, (struct sockaddr *)&clientAddr, &addrLen);
@@ -156,9 +155,8 @@ void Server::checkSockets(int i)
         {
             if (_pollFDs[j].fd == -1)
             {
-                Client *client = new Client(j); // 새로운 클라이언트 생성
+                Client *client = new Client(clientSocket); // 새로운 클라이언트 생성
                 _clientsList.insert(std::pair<int , Client *>(client->getClientSocket(), client));
-                std::cout << "클라이언트 소켓이 들어간 인덱스: " << j << "\n";
                 setPollFd(j, clientSocket, POLLIN, 0);
                 fcntl(clientSocket, F_SETFL, O_NONBLOCK);
             	std::cout << "connection successful\n";
@@ -181,8 +179,7 @@ void Server::checkSockets(int i)
         }
     	else
         {
-            Client a(_pollFDs[i].fd);
-            a.setReadBuf(buffer);
+            _clientsList[_pollFDs[i].fd]->setReadBuf(buffer);
             buffer[bytes_received] = '\0'; // 문자열 종료 문자 추가
         }
     }
