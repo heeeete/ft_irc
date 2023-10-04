@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Client.hpp"
 
 Server::Server()
 {
@@ -131,7 +132,7 @@ void Server::checkSockets(int i)
     struct sockaddr_in clientAddr;
     socklen_t addrLen;
 
-    std::string welcomeMsg = 
+    std::string welcomeMsg =
         ":server 001 <nickname> :Welcome to the Internet Relay Network <nickname>!\r\n"
 		"       ______                                           ______\r\n"
 		"      /::::::\\      *****************************      /::::::\\\r\n"
@@ -145,11 +146,13 @@ void Server::checkSockets(int i)
 	if (i == 0) // 서버 소켓
     {
         int clientSocket = accept(_serverSocket, (struct sockaddr *)&clientAddr, &addrLen);
+        std::cout << "클라이언트 SOCKET FD: " << clientSocket << "\n";
         // 새로운 클라이언트 소켓을 pollFDs 배열에 추가
         for (int j = 1; j < 100; j++)
         {
             if (_pollFDs[j].fd == -1)
             {
+                std::cout << "클라이언트 소켓이 들어간 인덱스: " << j << "\n";
                 setPollFd(j, clientSocket, POLLIN, 0);
                 fcntl(clientSocket, F_SETFL, O_NONBLOCK);
             	std::cout << "connection successful\n";
@@ -171,8 +174,9 @@ void Server::checkSockets(int i)
         }
     	else
         {
+            Client a(_pollFDs[i].fd);
+            a.setReadBuf(buffer);
             buffer[bytes_received] = '\0'; // 문자열 종료 문자 추가
-            std::cout << "Received: " << buffer << std::endl;
         }
     }
 }

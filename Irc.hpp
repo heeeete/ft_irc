@@ -1,5 +1,8 @@
 #ifndef IRC_HPP
-#define IRC_HPP
+# define IRC_HPP
+
+# define END_CHARACTERS "\r\n"
+# define VALID_CHARACTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890"
 
 # include <sys/types.h>
 # include <sys/socket.h>
@@ -17,7 +20,7 @@
 # include <string>
 # include <cerrno>
 # include <ctime>
-#include <fcntl.h>
+# include <fcntl.h>
 
 // # include "Macro.hpp"
 // # include "Colors.hpp"

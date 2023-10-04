@@ -7,12 +7,14 @@ NAME = ircserv
 SRCS = main.cpp \
 		Server.cpp \
 		Client.cpp \
-		Channel.cpp
+		Channel.cpp \
+		parsing.cpp
 
 DEPS = Server.hpp \
 		Irc.hpp \
 		Client.hpp \
-		Channel.hpp
+		Channel.hpp \
+		Message.hpp
 
 OBJS = $(SRCS:.cpp=.o)
 
