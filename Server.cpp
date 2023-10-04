@@ -134,6 +134,10 @@ void Server::checkSockets(int i)
 
 	std::string notRegisterMsg = ":server 451 *\r\n";
     std::string welcomeMsg =
+        ":server 001 <nick> :Welcome to the Internet Relay Network <nick>!<user>@<host>\r\n"
+        ":server 002 <nick> :Your host is <servername>, running version <ver>\r\n"
+        ":server 003 <nick> :This server was created <date>\r\n"
+        ":server 004 <nick> :<servername> <version> <available user modes> <available channel modes>"
 		"       ______                                           ______\r\n"
 		"      /::::::\\      *****************************      /::::::\\\r\n"
 		"      |      |      *    W  E  L  C  O  M  E    *      |      |\r\n"
