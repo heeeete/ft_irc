@@ -43,9 +43,15 @@ void		Client::processBuffer(const std::string& buf) {
 		std::string command(token);
 		m = parseMessage(token);
 		print_message(m);
+		execCmd(&m);
 		token = strtok(NULL, END_CHARACTERS);
 	}
 }
+
+void			Client::execCmd(Message *msg)
+{
+}
+
 void		Client::setToDeconnect(const bool status) {_toDeconnect = status;}
 void		Client::setNickName(const std::string& str) {_nickName = str;}
 void		Client::setOldNickName(const std::string& str) {_oldNickName = str;};

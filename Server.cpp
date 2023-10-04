@@ -156,6 +156,8 @@ void Server::checkSockets(int i)
         {
             if (_pollFDs[j].fd == -1)
             {
+                Client *client = new Client(j); // 새로운 클라이언트 생성
+                _clientsList.insert(std::pair<int , Client *>(client->getClientSocket(), client));
                 std::cout << "클라이언트 소켓이 들어간 인덱스: " << j << "\n";
                 setPollFd(j, clientSocket, POLLIN, 0);
                 fcntl(clientSocket, F_SETFL, O_NONBLOCK);

@@ -26,5 +26,10 @@
 // # include "Colors.hpp"
 // # include "Numerical_replies.hpp"
 
+# include "Server.hpp"
+# include "Client.hpp"
+# include "Message.hpp"
+# include "Channel.hpp"
+
 
 #endif

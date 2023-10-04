@@ -3,6 +3,8 @@
 
 #include "Irc.hpp"
 
+class Client;
+
 class Server
 {
 
@@ -33,6 +35,7 @@ class Server
         struct pollfd       _pollFDs[100];
         int          		_port;
 		std::string         _pwd;
+		std::map<int , Client *>	_clientsList;
 
 };
 

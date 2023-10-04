@@ -54,6 +54,7 @@ class Client {
 		void			setNbInfo(const int count);
 
 		void			processBuffer(const std::string& buf);
+		void			executeCmd(Message *msg);
 };
 
 #endif
