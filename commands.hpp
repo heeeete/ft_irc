@@ -3,7 +3,7 @@
 
 #include "Client.hpp"
 
-void    nick();
+void    nick(Client &client, Message *msg);
 void    user(Client &client, Message *msg);
 void    welcomeMsg(Client &client);
 void    pass();

@@ -9,16 +9,16 @@ void    welcomeMsg(Client &client)
 	client.sendMsg(client.getClientSocket(), RPL_MYINFO(client.getNickName(), client.getServer().getName(), "1.0", "Channel modes +ntikl", ""));
 }
 
-void    user(Client &client, Message *msg) 
+void    user(Client &client, Message *msg)
 {
     if (msg->params.size() < 4)
         client.sendMsg(client.getClientSocket(), ERR_NEEDMOREPARAMS(client.getNickName(), msg->command));
     if (client.getRegistrationDone())
         client.sendMsg(client.getClientSocket(), ERR_ALREADYREGISTRED(client.getNickName()));
-   
-    client.setUserName(msg->params[0]);
-    client.setHostName(msg->params[1]);
-    client.setRealName(msg->params[2]);
+
+    client.setUserName(msg->params[1]);
+    client.setHostName(msg->params[2]);
+    client.setRealName(msg->params[3]);
     client.setRegistrationDone(true);
 
     if (!client.getWelecomeSent())

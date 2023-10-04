@@ -64,7 +64,7 @@ void    Client::executeCmd(Message *msg)
 	}
 
 	switch(index) {
-		case 0: nick(); break;
+		case 0: nick(*this, msg); break;
 		case 1: user(*this, msg); break;
 		case 2: pass(); break;
 		case 3: join(); break;
