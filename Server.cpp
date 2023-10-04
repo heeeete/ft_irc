@@ -137,7 +137,7 @@ void Server::checkSockets(int i)
         ":server 001 <nick> :Welcome to the Internet Relay Network <nick>!<user>@<host>\r\n"
         ":server 002 <nick> :Your host is <servername>, running version <ver>\r\n"
         ":server 003 <nick> :This server was created <date>\r\n"
-        ":server 004 <nick> :<servername> <version> <available user modes> <available channel modes>"
+        ":server 004 <nick> :<servername> <version> <available user modes> <available channel modes>\r\n"
 		"       ______                                           ______\r\n"
 		"      /::::::\\      *****************************      /::::::\\\r\n"
 		"      |      |      *    W  E  L  C  O  M  E    *      |      |\r\n"
@@ -179,8 +179,8 @@ void Server::checkSockets(int i)
         }
     	else
         {
-            _clientsList[_pollFDs[i].fd]->setReadBuf(buffer);
             buffer[bytes_received] = '\0'; // 문자열 종료 문자 추가
+            _clientsList[_pollFDs[i].fd]->setReadBuf(buffer);
         }
     }
 }

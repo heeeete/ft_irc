@@ -48,6 +48,41 @@ void		Client::processBuffer(const std::string& buf) {
 	}
 }
 
+void    Client::executeCmd(Message *msg)
+{
+	std::string validCmds[] = {
+		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC", "MODE", "PART",
+		"QUIT", "LIST", "NAMES", "PRIVMSG", "NOTICE", "PING", "PONG", "WHOIS", "WHOWAS"
+	};
+
+	int index = 0;
+	std::cout << "123123123123\n";
+	while (validCmds[index] != msg->command) {
+		index++;
+	}
+	std::cout << "789789789789\n";
+	switch(index) {
+		case 0: nick(); break;
+		case 1: user(); break;
+		case 2: pass(); break;
+		case 3: join(); break;
+		case 4: kick(); break;
+		case 5: invite(); break;
+		case 6: topic(); break;
+		case 7: mode(); break;
+		case 8: part(); break;
+		case 9: quit(); break;
+		case 10: list(); break;
+		case 11: names(); break;
+		case 12: privmsg(); break;
+		case 13: notice(); break;
+		case 14: ping(); break;
+		case 15: pong(); break;
+		case 16: whois(); break;
+		case 17: whowas(); break;
+	}
+}
+
 // void			Client::executeCmd(Message *msg)
 // {
 // 	std::string validCmds[] = {

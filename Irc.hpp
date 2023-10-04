@@ -26,10 +26,11 @@
 // # include "Colors.hpp"
 // # include "Numerical_replies.hpp"
 
-# include "Server.hpp"
-# include "Client.hpp"
-# include "Message.hpp"
-# include "Channel.hpp"
+// # include "Server.hpp"
+// # include "Client.hpp"
+// # include "Message.hpp"
+// # include "Channel.hpp"
+// # include "commands.hpp"
 
 
 #endif
