@@ -36,7 +36,7 @@ class Client {
 		std::string		getOldNickName() const;
 		std::string		getUserName() const;
 		std::string		getRealName() const;
-		std::string		getHostName() const;				
+		std::string		getHostName() const;
 		std::string		getMode() const;
 		bool			getConnexionPassword() const;
 		bool			getRegistrationDone() const;

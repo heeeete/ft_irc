@@ -33,7 +33,8 @@ DEPS = Server.hpp \
 		Irc.hpp \
 		Client.hpp \
 		Channel.hpp \
-		Message.hpp
+		Message.hpp \
+		DefineReplies.hpp
 
 OBJS = $(SRCS:.cpp=.o)
 
