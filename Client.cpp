@@ -80,7 +80,7 @@ void    Client::executeCmd(Message *msg)
 		case 0: nick(*this, msg); break;
 		case 1: user(*this, msg); break;
 		case 2: pass(*this, msg); break;
-		case 3: join(); break;
+		case 3: join(*this, msg); break;
 		case 4: kick(); break;
 		case 5: invite(); break;
 		case 6: topic(); break;
