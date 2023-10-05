@@ -60,7 +60,7 @@ void    Client::executeCmd(Message *msg)
 {
 	std::string validCmds[] = {
 		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC", "MODE", "PART",
-		"QUIT", "LIST", "NAMES", "PRIVMSG", "NOTICE", "PING", "PONG", "WHOIS", "WHOWAS"
+		"QUIT", "LIST", "NAMES", "PRIVMSG", "NOTICE", "PING", "WHOIS", "WHOWAS"
 	};
 
 	if (msg->command == "CAP")
@@ -72,7 +72,7 @@ void    Client::executeCmd(Message *msg)
 	}
 
 	int index = 0;
-	while (index < 18 && validCmds[index] != msg->command) {
+	while (index < 17 && validCmds[index] != msg->command) {
 		index++;
 	}
 
@@ -91,10 +91,9 @@ void    Client::executeCmd(Message *msg)
 		case 11: names(); break;
 		case 12: privmsg(); break;
 		case 13: notice(); break;
-		case 14: ping(); break;
-		case 15: pong(); break;
-		case 16: whois(); break;
-		case 17: whowas(); break;
+		case 14: ping(*this, msg); break;
+		case 15: whois(); break;
+		case 16: whowas(); break;
 	}
 }
 

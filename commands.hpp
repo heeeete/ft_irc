@@ -18,8 +18,7 @@ void    list();
 void    names();
 void    privmsg();
 void    notice();
-void    ping();
-void    pong();
+void    ping(Client &client, Message *msg);
 void    whois();
 void    whowas();
 

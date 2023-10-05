@@ -21,7 +21,6 @@ SRCS = main.cpp \
 		commands/part.cpp \
 		commands/pass.cpp \
 		commands/ping.cpp \
-		commands/pong.cpp \
 		commands/privmsg.cpp \
 		commands/quit.cpp \
 		commands/topic.cpp \
