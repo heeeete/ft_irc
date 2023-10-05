@@ -23,6 +23,7 @@
 # include <time.h>
 # include <fcntl.h>
 # include <iterator>
+# include <istream>
 
 // # include "Macro.hpp"
 // # include "Colors.hpp"

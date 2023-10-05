@@ -23,6 +23,7 @@ int			Client::getNbInfo() const {return _nbInfo;}
 Server&		Client::getServer() const {return *_server;}
 int			Client::getPollFDsIdx() const {return _pollfds_idx;}
 bool		Client::getCorrectPwd() const {return _correctPwd;}
+std::vector<Channel *> Client::getJoinedChannels() const {return _joinedChannels;}
 
 void		Client::setPollFDsIdx(const int idx) {_pollfds_idx = idx;}
 void		Client::setCorrectPwd(const bool isCorrect) {_correctPwd = isCorrect;}
@@ -83,7 +84,7 @@ void    Client::executeCmd(Message *msg)
 		case 0: nick(*this, msg); break;
 		case 1: user(*this, msg); break;
 		case 2: pass(*this, msg); break;
-		case 3: join(); break;
+		case 3: join(this, msg); break;
 		case 4: kick(); break;
 		case 5: invite(); break;
 		case 6: topic(); break;
@@ -109,10 +110,22 @@ void		Client::setWelecomeSent(const bool status) {_welcomeSent = status;}
 void		Client::setHasAllInfo(const bool status) {_hasAllInfo = status;}
 void		Client::setNbInfo(const int count) {_nbInfo = count;}
 
-void	Client::sendMsg(int socket, std::string msg)
+void		Client::sendMsg(int socket, std::string msg)
 {
 	if (send(socket, msg.c_str(), msg.length(), 0) < 0)
 		perror("SEND FAILED");
 	std::cout << "========== send client " << socket << " ==========\n";
 	std::cout << msg << "\n\n";
+}
+
+void		Client::sendMsgChannel(std::string msg, Channel *target){
+	std::vector<Client*> clients = target->getClientList();
+	std::vector<Client*>::iterator isbegin = clients.begin();
+
+	while (isbegin != clients.end()){
+		if ((*isbegin)->getNickName() != _nickName)
+			sendMsg((*isbegin)->getClientSocket(), msg);
+		isbegin++;
+		std::cout << "ASDASDAS\n";
+	}
 }
