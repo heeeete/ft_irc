@@ -14,6 +14,7 @@ void    welcomeMsg(Client &client)
 
 void    user(Client &client, Message *msg)
 {
+	 std::cout << client.getCorrectPwd() << std::endl;
 	if (!client.getCorrectPwd())
 		return ;
     if (msg->params.size() < 4)

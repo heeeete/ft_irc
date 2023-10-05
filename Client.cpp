@@ -66,7 +66,10 @@ void    Client::executeCmd(Message *msg)
 	if (msg->command == "CAP")
 	{
 		sendMsg(_clientSocket, ERR_NOTREGISTERED);
+		setRegistrationDone(false);
 		setCorrectPwd(true);
+		setWelecomeSent(false);
+		setNickName("*");
 		_connectionPassword = false;
 		return ;
 	}
