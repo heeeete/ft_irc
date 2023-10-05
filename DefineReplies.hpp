@@ -26,19 +26,21 @@
 # define RPL_ENDOFNAMES(nick, channelName) 				":PPL_IRC 366 " + nick + " " + channelName + " :End of /NAMES list.\r\n"
 # define USER_JOIN(nick, username, hostname,channelName)			":" + nick + "!" + username + "@" + hostname + " JOIN " + channelName + "\r\n"
 
-/* ERROR */
-# define ERR_NOSUCHCHANNEL(nick, channelName)			":PPL_IRC 403 " + nick + " " + channelName + ":No such channel\r\n" //유효하지 않은 채널 이름
-# define ERR_TOOMANYCHANNELS(nick, channelName)			":PPL_IRC 405 " + nick + " " + channelName + ":You have joined too many channels\r\n" //유저가 4개 이상의 채널에 접속
 
 /* PING PONG */
 # define RPL_PONG(token)								":PPL_IRC PONG " + token + "\r\n"
 
 /* ERROR */
+# define ERR_NOSUCHNICK(nick)							":PPL_IRC 401 " + nick + " " + nick + " :No such nick/channel\r\n" //닉네임 못찾음
+# define ERR_NOSUCHCHANNEL(nick, channelName)			":PPL_IRC 403 " + nick + " " + channelName + " :No such channel\r\n" //유효하지 않은 채널 이름
+# define ERR_TOOMANYCHANNELS(nick, channelName)			":PPL_IRC 405 " + nick + " " + channelName + " :You have joined too many channels\r\n" //유저가 4개 이상의 채널에 접속
 # define ERR_NOORIGIN                                   ":PPL_IRC 409 * :No origin specified\r\n" //ping 에러
 
 # define ERR_NONICKNAMEGIVEN(nick)						":PPL_IRC 431 " + nick + " " + ":No nickname given\r\n" //공백 닉네임
 # define ERR_ERRONEUSNICKNAME(nick, rejectedNickname)	":PPL_IRC 432 " + nick + " " + rejectedNickname + " :Erroneus nickname\r\n" //특수문자 닉네임
 # define ERR_NICKNAMEINUSE(nick, rejectedNickname)		":PPL_IRC 433 " + nick + " " + rejectedNickname + " :Nickname is already in use\r\n" //중복된 닉네임
+# define ERR_NOTONCHANNEL(nick, channelName)			":PPL_IRC 442 " + nick + " " + channelName + " :You're not on that channel\r\n"	//클라이언트가 멤버가 아닌 채널 이펙트 명령을 수행하려고 할 때
+# define ERR_USERONCHANNEL(nick, toInviteNick, channelName)			":PPL_IRC 443 " + nick + " " + toInviteNick + " " + channelName + " :is already on channel\r\n"	//클라이언트가 이미 해당 채널에 있음
 # define ERR_NOTREGISTERED								":PPL_IRC 451 * :You have not registered\r\n"
 # define ERR_NEEDMOREPARAMS(nick, command)			    ":PPL_IRC 461 " + nick + " " + command + " :Not enough parameters\r\n"
 # define ERR_ALREADYREGISTRED(nick)                     ":PPL_IRC 462 " + nick + " :Unauthorized command (already registered)\r\n"

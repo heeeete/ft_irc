@@ -29,6 +29,7 @@ int								Channel::getCapacityLimit () const {return _capacityLimit;}
 
 void							Channel::addClient(Client* client) {
 	_clients.push_back(client);
+	client->addJoinedChannel(this);
 }
 
 void							Channel::setCapacityLimit(const int Limit) {_capacityLimit = Limit;}

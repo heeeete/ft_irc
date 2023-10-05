@@ -13,7 +13,7 @@ void    join(Client* client, Message *msg) {
 	while (std::getline(ss, channelName, ',')) {
 		if (client->getJoinedChannels().size() >= MAX_JOINED_CHANNEL){
 			client->sendMsg(client->getClientSocket(), ERR_TOOMANYCHANNELS(client->getNickName(), channelName));
-			break ;
+			return ;
 		}
 		if ((channelName[0] != '&' && channelName[0] != '#') || channelName.length() > 200 || (channelName.find(" ") != std::string::npos)){
 			client->sendMsg(client->getClientSocket(), ERR_NOSUCHCHANNEL(client->getNickName(), channelName));

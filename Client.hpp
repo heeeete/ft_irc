@@ -68,6 +68,8 @@ class Client {
 		void			setPollFDsIdx(const int idx);
 		void			setCorrectPwd(const bool isCorrect);
 
+		void			addJoinedChannel(Channel* channel);
+
 		void			processBuffer(const std::string& buf);
 		void			sendMsg(int socket, std::string msg);
 		void			sendMsgChannel(std::string msg, Channel *target);

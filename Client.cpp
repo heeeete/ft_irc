@@ -5,25 +5,25 @@
 Client::Client(int clientSocket, Server *s): _clientSocket(clientSocket), _server(s) {}
 Client::~Client(){}
 
-int			Client::getClientSocket() const {return _clientSocket;}
-std::string	Client::getReadBuf() const {return _readBuf;}
-std::string	Client::getSendBuf() const {return _sendBuf;}
-bool		Client::getToDeconnect() const {return _toDeconnect;}
-std::string	Client::getNickName() const {return _nickName;}
-std::string	Client::getOldNickName() const {return _oldNickName;}
-std::string	Client::getUserName() const {return _userName;}
-std::string	Client::getRealName() const { return _realName;}
-std::string Client::getHostName() const { return _hostName;}
-std::string	Client::getMode() const {return _mode;}
-bool		Client::getConnectionPassword() const {return _connectionPassword;}
-bool		Client::getRegistrationDone() const {return _registrationDone;}
-bool		Client::getWelecomeSent() const {return _welcomeSent;}
-bool		Client::getHasAllInfo() const {return _hasAllInfo;}
-int			Client::getNbInfo() const {return _nbInfo;}
-Server&		Client::getServer() const {return *_server;}
-int			Client::getPollFDsIdx() const {return _pollfds_idx;}
-bool		Client::getCorrectPwd() const {return _correctPwd;}
-std::vector<Channel *> Client::getJoinedChannels() const {return _joinedChannels;}
+int						Client::getClientSocket() const {return _clientSocket;}
+std::string				Client::getReadBuf() const {return _readBuf;}
+std::string				Client::getSendBuf() const {return _sendBuf;}
+bool					Client::getToDeconnect() const {return _toDeconnect;}
+std::string				Client::getNickName() const {return _nickName;}
+std::string				Client::getOldNickName() const {return _oldNickName;}
+std::string				Client::getUserName() const {return _userName;}
+std::string				Client::getRealName() const { return _realName;}
+std::string 			Client::getHostName() const { return _hostName;}
+std::string				Client::getMode() const {return _mode;}
+bool					Client::getConnectionPassword() const {return _connectionPassword;}
+bool					Client::getRegistrationDone() const {return _registrationDone;}
+bool					Client::getWelecomeSent() const {return _welcomeSent;}
+bool					Client::getHasAllInfo() const {return _hasAllInfo;}
+int						Client::getNbInfo() const {return _nbInfo;}
+Server&					Client::getServer() const {return *_server;}
+int						Client::getPollFDsIdx() const {return _pollfds_idx;}
+bool					Client::getCorrectPwd() const {return _correctPwd;}
+std::vector<Channel *>	Client::getJoinedChannels() const {return _joinedChannels;}
 
 void		Client::setPollFDsIdx(const int idx) {_pollfds_idx = idx;}
 void		Client::setCorrectPwd(const bool isCorrect) {_correctPwd = isCorrect;}
@@ -86,7 +86,7 @@ void    Client::executeCmd(Message *msg)
 		case 2: pass(*this, msg); break;
 		case 3: join(this, msg); break;
 		case 4: kick(); break;
-		case 5: invite(); break;
+		case 5: invite(this, msg); break;
 		case 6: topic(); break;
 		case 7: mode(); break;
 		case 8: part(); break;
@@ -110,6 +110,10 @@ void		Client::setWelecomeSent(const bool status) {_welcomeSent = status;}
 void		Client::setHasAllInfo(const bool status) {_hasAllInfo = status;}
 void		Client::setNbInfo(const int count) {_nbInfo = count;}
 
+void		Client::addJoinedChannel(Channel* channel) {
+	_joinedChannels.push_back(channel);
+}
+
 void		Client::sendMsg(int socket, std::string msg)
 {
 	if (send(socket, msg.c_str(), msg.length(), 0) < 0)
@@ -126,6 +130,5 @@ void		Client::sendMsgChannel(std::string msg, Channel *target){
 		if ((*isbegin)->getNickName() != _nickName)
 			sendMsg((*isbegin)->getClientSocket(), msg);
 		isbegin++;
-		std::cout << "ASDASDAS\n";
 	}
 }
