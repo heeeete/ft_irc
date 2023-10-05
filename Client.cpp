@@ -86,7 +86,7 @@ void    Client::executeCmd(Message *msg)
 		case 6: topic(); break;
 		case 7: mode(); break;
 		case 8: part(); break;
-		case 9: quit(); break;
+		case 9: quit(*this, msg); break;
 		case 10: list(); break;
 		case 11: names(); break;
 		case 12: privmsg(); break;

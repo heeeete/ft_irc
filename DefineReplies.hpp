@@ -21,8 +21,9 @@
 # define RPL_ENDOFMOTD(nick)							":PPL_IRC 376 " + nick + " :End of MOTD command\r\n"
 
 /* ERROR */
-# define ERR_NONICKNAMEGIVEN(nick)						":PPL_IRC 431 " + nick + " " + ":No nickname given\r\n"
-# define ERR_ERRONEUSNICKNAME(nick, rejectedNickname)	":PPL_IRC 432 " + nick + " " + rejectedNickname + " :Erroneus nickname\r\n"
+# define ERR_NONICKNAMEGIVEN(nick)						":PPL_IRC 431 " + nick + " " + ":No nickname given\r\n" //공백 닉네임
+# define ERR_ERRONEUSNICKNAME(nick, rejectedNickname)	":PPL_IRC 432 " + nick + " " + rejectedNickname + " :Erroneus nickname\r\n" //특수문자 닉네임
+# define ERR_NICKNAMEINUSE(nick, rejectedNickname)		":PPL_IRC 433 " + nick + " " + rejectedNickname + " :Nickname is already in use\r\n" //중복된 닉네임
 # define ERR_NOTREGISTERED								":PPL_IRC 451 * :You have not registered\r\n"
 # define ERR_NEEDMOREPARAMS(nick, command)			    ":PPL_IRC 461 " + nick + " " + command + " :Not enough parameters\r\n"
 # define ERR_ALREADYREGISTRED(nick)                     ":PPL_IRC 462 " + nick + " :Unauthorized command (already registered)\r\n"

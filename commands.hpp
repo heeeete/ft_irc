@@ -13,7 +13,7 @@ void    invite();
 void    topic();
 void    mode();
 void    part();
-void    quit();
+void    quit(Client &client, Message *msg);
 void    list();
 void    names();
 void    privmsg();

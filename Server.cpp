@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include "Client.hpp"
+#include "Irc.hpp"
 
 Server::Server(): _name("PPL ft_irc")
 {
@@ -35,6 +36,17 @@ std::string     Server::getName() const {return _name;}
 time_t const*	Server::getStartTime() const { return &_startTime;}
 std::map<int, Client *>& Server::getClientsList() {return _clientsList;}
 struct pollfd*	Server::getPollFDs() {return _pollFDs;}
+
+bool	Server::nickNameDupCheck(const std::string& nick){
+    std::map<int, Client *>::iterator isbegin = _clientsList.begin();
+
+    while (isbegin != _clientsList.end()){
+        if (isbegin->second->getNickName() == nick)
+            return true;
+        isbegin++;
+    }
+    return false;
+}
 
 int Server::argumentCheck(int argc, char *argv[])
 {
@@ -167,7 +179,7 @@ void Server::checkSockets(int i)
         if (bytes_received <= 0)
         {
             // 연결 종료 혹은 오류 발생
-			// _clientsList에서도 빼주기 
+			// _clientsList에서도 빼주기
             close(_pollFDs[i].fd);
             _pollFDs[i].fd = -1;
         }
