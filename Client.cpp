@@ -59,8 +59,8 @@ void		Client::processBuffer(const std::string& buf) {
 void    Client::executeCmd(Message *msg)
 {
 	std::string validCmds[] = {
-		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC", "MODE", "PART",
-		"QUIT", "LIST", "NAMES", "PRIVMSG", "NOTICE", "PING", "WHOIS", "WHOWAS"
+		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC",
+		"MODE", "PART", "QUIT", "PRIVMSG", "NOTICE", "PING"
 	};
 
 	if (msg->command == "CAP")
@@ -75,7 +75,7 @@ void    Client::executeCmd(Message *msg)
 	}
 
 	int index = 0;
-	while (index < 17 && validCmds[index] != msg->command) {
+	while (index < 13 && validCmds[index] != msg->command) {
 		index++;
 	}
 
@@ -90,13 +90,9 @@ void    Client::executeCmd(Message *msg)
 		case 7: mode(); break;
 		case 8: part(); break;
 		case 9: quit(*this, msg); break;
-		case 10: list(); break;
-		case 11: names(); break;
-		case 12: privmsg(); break;
-		case 13: notice(); break;
-		case 14: ping(*this, msg); break;
-		case 15: whois(); break;
-		case 16: whowas(); break;
+		case 10: privmsg(); break;
+		case 11: notice(); break;
+		case 12: ping(*this, msg); break;
 	}
 }
 
