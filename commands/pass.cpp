@@ -3,7 +3,13 @@
 #include "../DefineReplies.hpp"
 
 void    pass(Client &client, Message *msg) {
+	if (msg->params.empty())
+		client.sendMsg(client.getClientSocket(), ERR_NEEDMOREPARAMS(std::string("*"), msg->command));
+
 	std::string pwd = msg->params[0];
+
+	if (client.getRegistrationDone())
+        client.sendMsg(client.getClientSocket(), ERR_ALREADYREGISTRED(client.getNickName()));
 
 	client.setConnectionPassword(true);
 	if (client.getServer().getPassword() == pwd)
