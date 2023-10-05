@@ -14,13 +14,8 @@ void    topic();
 void    mode();
 void    part();
 void    quit(Client &client, Message *msg);
-void    list();
-void    names();
 void    privmsg();
 void    notice();
-void    ping();
-void    pong();
-void    whois();
-void    whowas();
+void    ping(Client &client, Message *msg);
 
 #endif
