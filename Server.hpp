@@ -4,6 +4,7 @@
 #include "Irc.hpp"
 
 class Client;
+class Channel;
 
 class Server
 {
@@ -24,6 +25,10 @@ class Server
 		void 	closeFds();
 		bool	nickNameDupCheck(const std::string& nick);
 
+		//Channel
+		void		createChannel(Client* owner, const std::string& channelName);
+		void		addClientToChannel(Client* client, Channel* channel);
+
 		// Getters
 		int				getServerSocket() const;
 		int				getPort() const;
@@ -32,6 +37,7 @@ class Server
 		time_t const*	getStartTime() const;
 		struct pollfd*	getPollFDs();
 		std::map<int, Client *>& getClientsList();
+		Channel*		getChannel(const std::string channelName);
 
 	private:
 
@@ -43,6 +49,7 @@ class Server
 		std::string			_name;
 		time_t				_startTime;
 		std::map<int , Client *>	_clientsList;
+		std::vector<Channel *>		_channelList;
 };
 
 #endif

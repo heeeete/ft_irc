@@ -36,6 +36,16 @@ std::string     Server::getName() const {return _name;}
 time_t const*	Server::getStartTime() const { return &_startTime;}
 std::map<int, Client *>& Server::getClientsList() {return _clientsList;}
 struct pollfd*	Server::getPollFDs() {return _pollFDs;}
+Channel*		Server::getChannel(const std::string channelName) {
+    std::vector<Channel *>::iterator isbegin = _channelList.begin();
+
+    while (isbegin != _channelList.end()) {
+        if ((*isbegin)->getName() == channelName)
+            return *isbegin;
+        isbegin++;
+    }
+    return NULL;
+}
 
 bool	Server::nickNameDupCheck(const std::string& nick){
     std::map<int, Client *>::iterator isbegin = _clientsList.begin();
@@ -195,4 +205,32 @@ void Server::closeFds()
 {
 	close(_serverSocket);
 	// TODO: clients fd 삭제
+}
+
+void	Server::createChannel(Client *owner, const std::string& channelName) {
+    std::vector<Channel *>::iterator isbegin = _channelList.begin();
+
+    while (isbegin != _channelList.end()) {
+        if ((*isbegin)->getName() == channelName) {
+            std::cout << channelName << " 채널이 이미 존재합니다." << std::endl;
+            return;
+        }
+        isbegin++;
+    }
+    try
+    {
+        Channel* newChannel = new Channel(owner, channelName);
+        _channelList.push_back(newChannel);
+        std::cout << channelName << " 채널이 만들어졌습니다." << std::endl;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        return ;
+    }
+
+}
+
+void	Server::addClientToChannel(Client* client, Channel* channel) {
+    channel->addClient(client);
 }

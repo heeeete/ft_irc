@@ -50,6 +50,7 @@ class Client {
 		Server&			getServer() const;
 		int				getPollFDsIdx() const;
 		bool			getCorrectPwd() const;
+		std::vector<Channel *> getJoinedChannels() const;
 
 		void			setReadBuf(const std::string buf);
 		void			setToDeconnect(const bool status);
@@ -69,6 +70,7 @@ class Client {
 
 		void			processBuffer(const std::string& buf);
 		void			sendMsg(int socket, std::string msg);
+		void			sendMsgChannel(std::string msg, Channel *target);
 		void			executeCmd(Message *msg);
 };
 
