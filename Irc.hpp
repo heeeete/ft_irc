@@ -22,6 +22,7 @@
 # include <ctime>
 # include <time.h>
 # include <fcntl.h>
+# include <iterator>
 
 // # include "Macro.hpp"
 // # include "Colors.hpp"

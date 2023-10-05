@@ -22,6 +22,7 @@ class Server
 		int 	socketLoop();
 		void 	checkSockets(int i);
 		void 	closeFds();
+		bool	nickNameDupCheck(const std::string& nick);
 
 		// Getters
 		int				getServerSocket() const;
@@ -42,7 +43,6 @@ class Server
 		std::string			_name;
 		time_t				_startTime;
 		std::map<int , Client *>	_clientsList;
-
 };
 
 #endif
