@@ -27,11 +27,12 @@ class Server
 
 		//Channel
 		void		createChannel(Client* owner, const std::string& channelName);
-		void		addClientToChannel(Client* client, Channel* channel);
+		// void		addClientToChannel(Client* client, Channel* channel);
 
 		// Getters
 		int				getServerSocket() const;
 		int				getPort() const;
+		Client*			getClient(const std::string& nickName);
 		std::string		getPassword() const;
 		std::string		getName() const;
 		time_t const*	getStartTime() const;
@@ -40,7 +41,6 @@ class Server
 		Channel*		getChannel(const std::string channelName);
 
 	private:
-
 		int                 _serverSocket;
         struct sockaddr_in  _serverAddr;
         struct pollfd       _pollFDs[100];

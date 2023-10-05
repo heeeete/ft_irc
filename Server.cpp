@@ -46,6 +46,16 @@ Channel*		Server::getChannel(const std::string channelName) {
     }
     return NULL;
 }
+Client*			Server::getClient(const std::string& nickName) {
+    std::map<int, Client*>::iterator isBegin = _clientsList.begin();
+
+    while (isBegin != _clientsList.end()) {
+        if (isBegin->second->getNickName() == nickName)
+            return isBegin->second;
+        isBegin++;
+    }
+    return NULL;
+}
 
 bool	Server::nickNameDupCheck(const std::string& nick){
     std::map<int, Client *>::iterator isbegin = _clientsList.begin();
@@ -231,6 +241,6 @@ void	Server::createChannel(Client *owner, const std::string& channelName) {
 
 }
 
-void	Server::addClientToChannel(Client* client, Channel* channel) {
-    channel->addClient(client);
-}
+// void	Server::addClientToChannel(Client* client, Channel* channel) {
+//     channel->addClient(client);
+// }

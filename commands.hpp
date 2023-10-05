@@ -9,7 +9,7 @@ void    welcomeMsg(Client &client);
 void    pass(Client &client, Message *msg);
 void    join(Client* client, Message *msg);
 void    kick();
-void    invite();
+void    invite(Client* client, Message* msg);
 void    topic();
 void    mode();
 void    part();
