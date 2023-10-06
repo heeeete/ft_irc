@@ -32,6 +32,24 @@ void							Channel::addClient(Client* client) {
 	client->addJoinedChannel(this);
 }
 
+void							Channel::removeClient(Client* client) {
+
+    for(std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+        if ((*it)->getNickName() == client->getNickName())
+            _clients.erase(it);
+        if (isOperator(client))
+            removeOperator(client);
+        client->delJoinedChannel(this);
+    }
+}
+
+void                            Channel::removeOperator(Client* client) {
+    for(std::vector<Client*>::iterator it = _operators.begin(); it != _operators.end(); ++it) {
+        if ((*it)->getNickName() == client->getNickName())
+            _operators.erase(it);
+    }
+}
+
 void							Channel::setCapacityLimit(const int Limit) {_capacityLimit = Limit;}
 void							Channel::setChannelPassword(const std::string& str) {_channelPassword = str;}
 void							Channel::setTopic(const std::string& str) {_topic = str;}

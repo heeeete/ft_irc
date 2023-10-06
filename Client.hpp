@@ -69,6 +69,7 @@ class Client {
 		void			setCorrectPwd(const bool isCorrect);
 
 		void			addJoinedChannel(Channel* channel);
+		void			delJoinedChannel(Channel* channel);
 
 		void			processBuffer(const std::string& buf);
 		void			sendMsg(int socket, std::string msg);

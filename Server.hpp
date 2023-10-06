@@ -27,6 +27,7 @@ class Server
 
 		//Channel
 		void		createChannel(Client* owner, const std::string& channelName);
+		void    	delChannel(const std::string& channelName);
 		// void		addClientToChannel(Client* client, Channel* channel);
 
 		// Getters

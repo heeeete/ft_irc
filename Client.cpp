@@ -89,7 +89,7 @@ void    Client::executeCmd(Message *msg)
 		case 5: invite(this, msg); break;
 		case 6: topic(); break;
 		case 7: mode(); break;
-		case 8: part(); break;
+		case 8: part(this, msg); break;
 		case 9: quit(*this, msg); break;
 		case 10: privmsg(); break;
 		case 11: notice(); break;
@@ -112,6 +112,13 @@ void		Client::setNbInfo(const int count) {_nbInfo = count;}
 
 void		Client::addJoinedChannel(Channel* channel) {
 	_joinedChannels.push_back(channel);
+}
+
+void		Client::delJoinedChannel(Channel* channel) {
+	for(std::vector<Channel*>::iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it) {
+        if ((*it)->getName() == channel->getName())
+            _joinedChannels.erase(it);
+    }
 }
 
 void		Client::sendMsg(int socket, std::string msg)

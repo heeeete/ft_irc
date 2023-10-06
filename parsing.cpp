@@ -1,9 +1,8 @@
-// #include "Irc.hpp"
 #include "Message.hpp"
 
 Message parseMessage(std::string input)
 {
-   	Message msg;
+	Message msg;
 
 	// Validar que hay al menos un espacio
     if (input.find(' ') == std::string::npos)
@@ -83,4 +82,3 @@ void	print_message(const Message& msg)
     }
     std::cout << std::endl << std::endl;
 }
-

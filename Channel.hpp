@@ -36,6 +36,8 @@ class Channel {
 		int								getCapacityLimit () const;
 
 		void							addClient(Client* client);
+		void							removeClient(Client* client);
+		void							removeOperator(Client* client);
 		void							setCapacityLimit(const int Limit);
 		void							setChannelPassword(const std::string& str);
 		void							setTopic(const std::string& str);

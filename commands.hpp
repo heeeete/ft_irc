@@ -12,7 +12,7 @@ void    kick();
 void    invite(Client* client, Message* msg);
 void    topic();
 void    mode();
-void    part();
+void    part(Client* client, Message *msg);
 void    quit(Client &client, Message *msg);
 void    privmsg();
 void    notice();

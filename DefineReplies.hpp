@@ -26,6 +26,8 @@
 # define RPL_ENDOFNAMES(nick, channelName) 				":PPL_IRC 366 " + nick + " " + channelName + " :End of /NAMES list.\r\n"
 # define USER_JOIN(nick, username, hostname,channelName)			":" + nick + "!" + username + "@" + hostname + " JOIN " + channelName + "\r\n"
 
+/* PART */
+# define RPL_PART(nick, channel, reason)                nick + " PART #" + channel + " " + reason + "\r\n"
 
 /* PING PONG */
 # define RPL_PONG(token)								":PPL_IRC PONG " + token + "\r\n"

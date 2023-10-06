@@ -241,6 +241,15 @@ void	Server::createChannel(Client *owner, const std::string& channelName) {
 
 }
 
+void    Server::delChannel(const std::string& channelName)
+{
+    for (std::vector<Channel*>::iterator it = _channelList.begin(); it != _channelList.end(); ++it)
+	{
+		if ((*it)->getName() == channelName)
+			_channelList.erase(it);
+	}
+}
+
 // void	Server::addClientToChannel(Client* client, Channel* channel) {
 //     channel->addClient(client);
 // }
