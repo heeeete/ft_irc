@@ -1,7 +1,6 @@
-#include "../Irc.hpp"
-#include "../commands.hpp"
-#include "../DefineReplies.hpp"
+#include "../Server.hpp"
 
-void    quit(Client &client, Message *msg) {
+void Server::quit(Client *client, Message *msg) 
+{
 
 }

@@ -1,11 +1,9 @@
-#include "../Irc.hpp"
-#include "../commands.hpp"
-#include "../DefineReplies.hpp"
+#include "../Server.hpp"
 
-void    ping(Client &client, Message *msg)
+void Server::ping(Client *client, Message *msg)
 {
     if (msg->params.empty())
-        client.sendMsg(client.getClientSocket(), ERR_NOORIGIN);
+        client->sendMsg(ERR_NOORIGIN);
     else
-        client.sendMsg(client.getClientSocket(), RPL_PONG(msg->params[0]));
+        client->sendMsg(RPL_PONG(msg->params[0]));
 }
