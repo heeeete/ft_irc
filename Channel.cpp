@@ -59,7 +59,10 @@ void Channel::removeOperator(Client *client)
 	for (std::vector<Client *>::iterator iter = _operators.begin(); iter != _operators.end(); ++iter)
 	{
         if ((*iter)->getNickname() == client->getNickname())
+		{
             _operators.erase(iter);
+			return ;
+		}
     }
 }
 
