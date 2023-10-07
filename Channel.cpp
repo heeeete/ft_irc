@@ -1,6 +1,6 @@
 #include "Channel.hpp"
 
-Channel::Channel(Client* owner, const std::string& channelName) 
+Channel::Channel(Client* owner, const std::string& channelName)
 	:_name(channelName), _capacityLimit(-1) { _operators.push_back(owner); }
 Channel::~Channel() {};
 
@@ -20,7 +20,7 @@ void Channel::setMode(std::string mode) { _mode = mode; }
 void Channel::setChannelPassword(std::string password) { _channelPassword = password; }
 void Channel::setCapacityLimit(int limit) { _capacityLimit = limit; }
 
-std::string Channel::getClientsName() 
+std::string Channel::getClientsName()
 {
 	std::vector<Client *>::iterator iter = _clients.begin();
 	std::string names;
@@ -43,17 +43,20 @@ void Channel::addClient(Client *client)
 void Channel::removeClient(Client *client)
 {
 	for(std::vector<Client*>::iterator iter = _clients.begin(); iter != _clients.end(); ++iter) {
-        if ((*iter)->getNickname() == client->getNickname())
+        if ((*iter) == client)
+		{
             _clients.erase(iter);
-        if (isOperator(client))
-            removeOperator(client);
-        client->delJoinedChannel(this);
+        	client->delJoinedChannel(this);
+			break;
+		}
     }
+    if (isOperator(client))
+        removeOperator(client);
 }
 
 void Channel::removeOperator(Client *client)
 {
-	for (std::vector<Client *>::iterator iter = _operators.begin(); iter != _operators.end(); ++iter) 
+	for (std::vector<Client *>::iterator iter = _operators.begin(); iter != _operators.end(); ++iter)
 	{
         if ((*iter)->getNickname() == client->getNickname())
             _operators.erase(iter);
