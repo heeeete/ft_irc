@@ -37,6 +37,7 @@ std::string Channel::getClientsName()
 void Channel::addClient(Client *client)
 {
 	_clients.push_back(client);
+	client->addJoinedChannel(this);
 }
 
 void Channel::removeClient(Client *client)
