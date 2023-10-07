@@ -6,12 +6,13 @@
 
 class Client;
 
-class Channel 
+class Channel
 {
 private:
 	std::string _name; // 채널 이름
 	std::vector<Client *> _clients; // 채널에 속한 클라이언트들
 	std::vector<Client *> _operators; //채널 오퍼레이터들
+	std::vector<Client *> _inviteds;
 
 	std::vector<std::string> _kickedUsers;
 	std::vector<std::string> _bannedUsers;
@@ -20,14 +21,14 @@ private:
 	std::string _topic;
 	std::string _mode;
 	std::string _channelPassword;
-	int _capacityLimit; // 뭔지 모르겠음 
+	int _capacityLimit; // 뭔지 모르겠음
 
 public:
 	Channel(Client* owner, const std::string& channelName);
 	~Channel();
 
 	// getter
-	std::string getName() const; 
+	std::string getName() const;
 	std::vector<Client *> getClients() const;
 	std::vector<Client *> getOperators() const;
 	std::vector<std::string> getKickedUsers() const;
@@ -46,6 +47,7 @@ public:
 
 	std::string getClientsName(); // 채널에 속한 클라이언트 이름들 가공
 	void addClient(Client *client);
+	void addInviteds(Client *client);
 	void removeClient(Client *client);
 	void removeOperator(Client* client);
 
