@@ -38,6 +38,9 @@ void Server::invite(Client *client, Message *msg)
 		client->sendMsg(ERR_NOTONCHANNEL(client->getNickname(), msg->params[1]));
 	else if (!alreadyExists(toInvite, msg)) //이미 유저가 해당 채널에 속해 있을 때
 		client->sendMsg(ERR_USERONCHANNEL(client->getNickname(), toInvite->getNickname(), msg->params[1]));
-	//아마 초대하는 메시지 같은 걸 추가하겠죠? 
+	
+	 Channel *ch = getChannel(msg->params[1]);
+	 if (!ch->isOperator(client))
+	 	client->sendMsg(ERR_CHANOPRIVSNEEDED(client->getNickname(), ch->getName()));
 }
 

@@ -47,5 +47,6 @@
 # define ERR_NEEDMOREPARAMS(nick, command)			    ":PPL_IRC 461 " + nick + " " + command + " :Not enough parameters\r\n"
 # define ERR_ALREADYREGISTRED(nick)                     ":PPL_IRC 462 " + nick + " :Unauthorized command (already registered)\r\n"
 # define ERR_PASSWDMISMATCH								":PPL_IRC 464 * :Password incorrect\r\n"
+# define ERR_CHANOPRIVSNEEDED(nick, channelName)		":PPL_IRC 482 " + nick + " " + channelName + " :You're not channel operator\r\n"
 
 #endif
