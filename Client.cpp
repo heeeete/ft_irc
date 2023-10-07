@@ -3,11 +3,11 @@
 Client::Client(int clientSocket) : _clientSocket(clientSocket)
 {
 	_nickname = "*";
-	_hasValidPassword = false; 
+	_hasValidPassword = false;
 	_isRegistered = false;
 }
 
-// readBuf 관련 함수 
+// readBuf 관련 함수
 std::string Client::getReadBuf() const {return _readBuf; }
 void Client::setReadBuf(const std::string buf) { _readBuf += buf; }
 void Client::clearReadBuf() { _readBuf.clear(); }
@@ -40,20 +40,20 @@ void Client::setIsRegistered(bool isRegistered) { _isRegistered = isRegistered; 
 void Client::setShouldBeDeleted(bool shouldBeDeleted) { _shouldBeDeleted = shouldBeDeleted; }
 
 void Client::addJoinedChannel(Channel *channel) { _joinedChannels.push_back(channel); }
-void Client::delJoinedChannel(Channel *channel) 
+void Client::delJoinedChannel(Channel *channel)
 {
 	for (std::vector<Channel *>::iterator iter = _joinedChannels.begin(); iter != _joinedChannels.end(); iter++)
 	{
-		if ((*iter)->getName() == channel->getName())
+		if ((*iter) == channel)
 		{
 			_joinedChannels.erase(iter);
 			delete *iter; //맞나?
-			return ; 
+			return ;
 		}
 	}
 }
 
-// 클라이언트한테 메시지 보내기 
+// 클라이언트한테 메시지 보내기
 void Client::sendMsg(std::string msg)
 {
 	if (send(_clientSocket, msg.c_str(), msg.length(), 0) < 0)
@@ -62,7 +62,7 @@ void Client::sendMsg(std::string msg)
 	std::cout << msg << "\n\n";
 }
 
-// 등록 과정 필요한지 알려줌 
+// 등록 과정 필요한지 알려줌
 bool Client::isRegistrationRequired()
 {
 	if (!_isRegistered && _isNicknameRegistered && _isUserinfoRegistered)
