@@ -1,7 +1,7 @@
 #include "Channel.hpp"
 
 Channel::Channel(Client* owner, const std::string& channelName)
-	:_name(channelName), _capacityLimit(-1) { _operators.push_back(owner); }
+	:_name(channelName), _capacityLimit(-1), _mode("+nt") { _operators.push_back(owner); }
 Channel::~Channel() {};
 
 std::string Channel::getName() const { return _name; }
@@ -38,6 +38,10 @@ void Channel::addClient(Client *client)
 {
 	_clients.push_back(client);
 	client->addJoinedChannel(this);
+}
+
+void Channel::addInviteds(Client *client){
+	_inviteds.push_back(client);
 }
 
 void Channel::removeClient(Client *client)

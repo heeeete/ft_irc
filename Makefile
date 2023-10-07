@@ -1,7 +1,7 @@
 CXX = c++
 
 CXXFLAGS = -std=c++98
-OPT			= -g -fsanitize=address
+OPT			= -pedantic -Wfatal-errors
 
 NAME = ircserv
 
@@ -23,8 +23,8 @@ SRCS = main.cpp \
 		commands/part.cpp \
 		commands/privmsg.cpp \
 		commands/quit.cpp \
-		commands/topic.cpp 
-		
+		commands/topic.cpp
+
 DEPS = Server.hpp \
 		Irc.hpp \
 		Client.hpp \

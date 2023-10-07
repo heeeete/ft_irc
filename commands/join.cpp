@@ -29,12 +29,14 @@ void Server::join(Client *client, Message *msg)
 			std::cerr << channelName << " 채널이 만들어지지 않았습니다." << std::endl;
 			return ;
 		}
-		else 
+		else
 		{
 			ch->addClient(client);
 			std::cout << client->getNickname() << ' ' << ch->getName() << "접속\n";
 		}
 		client->sendMsgToChannel(USER_JOIN(client->getNickname(), client->getUsername(), client->getHostname(), ch->getName()), ch);
+		client->sendMsg(USER_JOIN(client->getNickname(), client->getUsername(), client->getHostname(), ch->getName()));
+		//REPLY
 		client->sendMsg(RPL_NAMREPLY(client->getNickname(), ch->getName(), ch->getClientsName()));
 		client->sendMsg(RPL_ENDOFNAMES(client->getNickname(), ch->getName()));
 	}

@@ -8,19 +8,19 @@ Server::Server(int port, std::string password) :_port(port), _password(password)
 	_serverSocket = socket(PF_INET, SOCK_STREAM, 0);
 	if (_serverSocket == -1)
 		throw ServerException("Server socket creation failed!");
-	
+
 	struct sockaddr_in serverAddr;
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(_port);
     serverAddr.sin_addr.s_addr = INADDR_ANY;
 
-	if (bind(_serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == -1) 
+	if (bind(_serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == -1)
 	{
-        close(_serverSocket); 
+        close(_serverSocket);
 		throw ServerException("Binding failed!");
     }
 
-	if (listen(_serverSocket, 5) == -1) 
+	if (listen(_serverSocket, 5) == -1)
 	{
         close(_serverSocket);
 		throw ServerException("Listening failed!");
@@ -41,13 +41,13 @@ Server::Server(int port, std::string password) :_port(port), _password(password)
 
 Server::~Server() {}
 
-// 클라이언트 이벤트를 기다리고 처리 
+// 클라이언트 이벤트를 기다리고 처리
 void Server::run()
 {
 	while (1)
 	{
 		int result = poll(_pollFd, POLLFD_SIZE, -1);
-		
+
 		if (result > 0)
 		{
 			for (int i = 0; i < POLLFD_SIZE; i++)
@@ -64,7 +64,7 @@ void Server::run()
 	}
 }
 
-//클라이언트 소켓 추가 
+//클라이언트 소켓 추가
 void Server::addClient()
 {
 	struct sockaddr_in clientAddr;
@@ -75,10 +75,10 @@ void Server::addClient()
 		throw ServerException("accept failed");
 	fcntl(clientSocket, F_SETFL, O_NONBLOCK);
 	std::cout << "클라이언트 SOCKET FD: " << clientSocket << "\n";
-	
-	Client *client = new Client(clientSocket); //나중에 delete로 지워주기 
+
+	Client *client = new Client(clientSocket); //나중에 delete로 지워주기
 	_clientList.insert(std::pair<int, Client *>(clientSocket, client));
-	
+
 	for (int i = 1; i < POLLFD_SIZE; i++)
 	{
 		if (_pollFd[i].fd == -1)
@@ -93,14 +93,14 @@ void Server::addClient()
 	}
 }
 
-// 클라이언트로부터 데이터 받아서 처리 
+// 클라이언트로부터 데이터 받아서 처리
 void Server::handleReceivedData(int pollIdx)
 {
 	std::cout << "클라이언트 이벤트 발생!!\n";
-	
+
 	char buf[1024];
 	ssize_t bytesReceived = recv(_pollFd[pollIdx].fd, buf, sizeof(buf) - 1, 0);
-	if (bytesReceived <= 0) // 연결 종료 혹은 오류 발생 
+	if (bytesReceived <= 0) // 연결 종료 혹은 오류 발생
 	{
 		close(_pollFd[pollIdx].fd);
 		_pollFd[pollIdx].fd = -1;
@@ -109,7 +109,7 @@ void Server::handleReceivedData(int pollIdx)
 	else
 	{
 		buf[bytesReceived] = '\0';
-		Client *currClient = _clientList[_pollFd[pollIdx].fd]; 
+		Client *currClient = _clientList[_pollFd[pollIdx].fd];
 		currClient->setReadBuf(buf);
 
 		if (currClient->getReadBuf().find(END_CHARACTERS) != std::string::npos)
@@ -118,7 +118,7 @@ void Server::handleReceivedData(int pollIdx)
 
 }
 
-// 버퍼에 저장된 데이터 처리 
+// 버퍼에 저장된 데이터 처리
 void Server::processBuffer(Client *client)
 {
 	std::string buf = client->getReadBuf();
@@ -138,16 +138,16 @@ void Server::processBuffer(Client *client)
 		executeCmd(client, &msg);
 		token = strtok(NULL, END_CHARACTERS);
 	}
-	if (client->isRegistrationRequired()) // 클라이언트 등록되어야할 때  
+	if (client->isRegistrationRequired()) // 클라이언트 등록되어야할 때
 		registration(*client);
-	if (client->shouldBeDeleted()) // 클라이언트가 삭제돼야할 때  
+	if (client->shouldBeDeleted()) // 클라이언트가 삭제돼야할 때
 	{
-		close(client->getClientSocket()); //소켓 닫기 
+		close(client->getClientSocket()); //소켓 닫기
 		_clientList.erase(client->getClientSocket()); // clientList에서 해당 소켓 삭제
 		_pollFd[client->getPollFdIdx()].fd = -1; //pollFd에서 fd 삭제
-		delete client; // 클라이언트 삭제 
+		delete client; // 클라이언트 삭제
 		return ;
-		//quit해도 클라이언트 삭제해줘야 
+		//quit해도 클라이언트 삭제해줘야
 	}
 	client->clearReadBuf();
 }
@@ -156,14 +156,14 @@ void Server::processBuffer(Client *client)
 void Server::executeCmd(Client *client, Message *msg)
 {
 	std::string validCmds[] = {
-		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC", 
+		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC",
 		"MODE", "PART", "QUIT", "PRIVMSG", "NOTICE", "PING", "CAP"
 	};
 
 	int index = 0;
 	while (index < 14 && validCmds[index] != msg->command)
 		index++;
-	
+
 	switch(index) {
 		case 0: nick(client, msg); break;
 		case 1: user(client, msg); break;
@@ -178,8 +178,8 @@ void Server::executeCmd(Client *client, Message *msg)
 		case 10: privmsg(); break;
 		case 11: notice(); break;
 		case 12: ping(client, msg); break;
-		case 13: cap(client); break; 
-		case 14: break; //맞는 command 없을 때 
+		case 13: cap(client); break;
+		case 14: break; //맞는 command 없을 때
 	}
 
 }
@@ -217,7 +217,7 @@ void Server::createChannel(Client *owner, const std::string& channelName)
 		if ((*iter)->getName() == channelName)
 		{
 			std::cout << channelName << " 채널이 이미 존재합니다." << std::endl;
-			return ; //채널 이미 존재하니까 아무일도 안하고 그냥 나가는 것 
+			return ; //채널 이미 존재하니까 아무일도 안하고 그냥 나가는 것
 		}
 		iter++;
 	}
@@ -241,7 +241,7 @@ void Server::delChannel(const std::string& channelName)
 		if ((*it)->getName() == channelName)
 		{
 			_channelList.erase(it);
-			delete *it; //채널 동적할당 해제 추가해줌 
+			delete *it; //채널 동적할당 해제 추가해줌
 			return ;
 		}
 	}
@@ -258,7 +258,7 @@ Channel *Server::getChannel(const std::string channelName)
 		iter++;
 	}
 	return NULL;
-} 
+}
 
 Client *Server::getClient(const std::string& nickname)
 {

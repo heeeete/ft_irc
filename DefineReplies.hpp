@@ -20,6 +20,9 @@
 														"                    *****************************\r\n"
 # define RPL_ENDOFMOTD(nick)							":PPL_IRC 376 " + nick + " :End of MOTD command\r\n"
 
+//INVITE
+# define RPL_INVITING(nick, toInviteUser, channelName)				":PPL_IRC 341 " + nick + " " + toInviteUser + " " + ":" + channelName + "\r\n"
+//:irc.local 341 zxc qwe :#123
 
 // JOIN
 # define RPL_NAMREPLY(nick, channelName, names) 		":PPL_IRC 353 " + nick + " = " + channelName + " :" + names + "\r\n"
@@ -30,8 +33,8 @@
 # define RPL_PART(nick, userName, hostName , channel, reason)                ":" + nick + "!" + userName + "@" + hostName + " " + "PART " + channel + " :" + reason + "\r\n"
 
 /* PING PONG */
-# define RPL_PONG(token)								":PPL_IRC PONG " + token + "\r\n"
-
+# define RPL_PONG(token)								":PPL_IRC PONG " + token + " :PPL_IRC\r\n"
+//:irc.local PONG irc.local :irc.local
 /* ERROR */
 # define ERR_NOSUCHNICK(nick)							":PPL_IRC 401 " + nick + " " + nick + " :No such nick/channel\r\n" //닉네임 못찾음
 # define ERR_NOSUCHCHANNEL(nick, channelName)			":PPL_IRC 403 " + nick + " " + channelName + " :No such channel\r\n" //유효하지 않은 채널 이름
@@ -48,5 +51,6 @@
 # define ERR_ALREADYREGISTRED(nick)                     ":PPL_IRC 462 " + nick + " :Unauthorized command (already registered)\r\n"
 # define ERR_PASSWDMISMATCH								":PPL_IRC 464 * :Password incorrect\r\n"
 # define ERR_CHANOPRIVSNEEDED(nick, channelName)		":PPL_IRC 482 " + nick + " " + channelName + " :You're not channel operator\r\n"
+//:irc.local 482 qwe #123 :You must be a channel operator
 
 #endif
