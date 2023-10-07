@@ -2,19 +2,18 @@
 
 Message parseMessage(std::string input)
 {
-	Message msg;
+   	Message msg;
 
-	// Validar que hay al menos un espacio
     if (input.find(' ') == std::string::npos)
 	{
 		msg.command = input;
 		return msg;
     }
-	// Eliminate empty spaces and special characters at the beginning of the entry
+
     while (input[0] == ' ' || input[0] == '\r' ||  input[0] == '\n' \
 			|| input[0] == 'v' || input[0] == '\t' || input[0] == '\f')
         input = input.substr(1);
-    // Parsing prefix
+
     if (input[0] == ':')
 	{
         size_t prefixEnd = input.find(' ');
@@ -23,21 +22,19 @@ Message parseMessage(std::string input)
             msg.prefix = input.substr(1, prefixEnd - 1);
             input = input.substr(prefixEnd + 1);
         }
-		else	// Invalid message
+		else	
 			return msg;
     }
 
-    // Parsing command
     size_t commandEnd = input.find(' ');
     if (commandEnd != std::string::npos)
 	{
         msg.command = input.substr(0, commandEnd);
         input = input.substr(commandEnd + 1);
     }
-	else // Invalid message
+	else 
         return msg;
 
-    // Parsing parameters
     while (input[0] == ' ')
         input = input.substr(1);
     while (input.length() > 0)
@@ -66,7 +63,7 @@ Message parseMessage(std::string input)
 }
 
 
-void	print_message(const Message& msg)
+void	printMessage(const Message& msg)
 {
     if (!msg.prefix.empty()) {
         std::cout << ":" << msg.prefix << " ";
@@ -82,3 +79,4 @@ void	print_message(const Message& msg)
     }
     std::cout << std::endl << std::endl;
 }
+

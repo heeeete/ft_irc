@@ -1,48 +1,55 @@
 #ifndef CHANNEL_HPP
-#define CHANNEL_HPP
+# define CHANNEL_HPP
 
-#include "Irc.hpp"
-#include "Client.hpp"
+# include "Irc.hpp"
+# include "Client.hpp"
 
 class Client;
 
-class Channel {
-	private:
-		std::vector<Client*> 			_clients;
-		std::vector<std::string>		_kicked_users;
-		std::vector<std::string>		_banned_users;
-		std::vector<Client*>			_operators;
-		std::vector<std::string>		_voiced_users;
-		std::string 					_name;
-		std::string						_topic;
-		std::string						_mode;
-		std::string						_channelPassword;
-		int								_capacityLimit;
-	public:
-		Channel(Client* owner, const std::string& channelName);
-		~Channel();
+class Channel 
+{
+private:
+	std::string _name; // 채널 이름
+	std::vector<Client *> _clients; // 채널에 속한 클라이언트들
+	std::vector<Client *> _operators; //채널 오퍼레이터들
 
-		std::vector<Client*>			getClientList () const;
-		std::vector<std::string>		getKicked_users () const;
-		std::vector<std::string>		getBanned_users () const;
-		std::vector<Client *>			getOperators () const;
-		std::vector<std::string>		getVoiced_users () const;
-		std::string 					getName () const;
-		std::string						getNames ();
-		std::string						getOperatorPassword () const;
-		std::string						getTopic () const;
-		std::string						getMode () const;
-		std::string						getChannelPassword () const;
-		int								getCapacityLimit () const;
+	std::vector<std::string> _kickedUsers;
+	std::vector<std::string> _bannedUsers;
+	std::vector<std::string> _voicedUsers;
 
-		void							addClient(Client* client);
-		void							removeClient(Client* client);
-		void							removeOperator(Client* client);
-		void							setCapacityLimit(const int Limit);
-		void							setChannelPassword(const std::string& str);
-		void							setTopic(const std::string& str);
+	std::string _topic;
+	std::string _mode;
+	std::string _channelPassword;
+	int _capacityLimit; // 뭔지 모르겠음 
 
-		bool							isOperator(Client* client);
+public:
+	Channel(Client* owner, const std::string& channelName);
+	~Channel();
+
+	// getter
+	std::string getName() const; 
+	std::vector<Client *> getClients() const;
+	std::vector<Client *> getOperators() const;
+	std::vector<std::string> getKickedUsers() const;
+	std::vector<std::string> getBannedUsers() const;
+	std::vector<std::string> getVoicedUsers() const;
+	std::string getTopic() const;
+	std::string getMode() const;
+	std::string getChannelPassword() const;
+	int getCapacityLimit() const;
+
+	// setter
+	void setTopic(std::string topic);
+	void setMode(std::string mode);
+	void setChannelPassword(std::string password);
+	void setCapacityLimit(int limit);
+
+	std::string getClientsName(); // 채널에 속한 클라이언트 이름들 가공
+	void addClient(Client *client);
+	void removeClient(Client *client);
+	void removeOperator(Client* client);
+
+	bool isOperator(Client *client);
 };
 
 #endif

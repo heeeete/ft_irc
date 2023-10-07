@@ -3,14 +3,13 @@
 
 #include "Irc.hpp"
 
-typedef struct s_message {
+struct Message {
     std::string prefix;
     std::string command;
     std::vector<std::string> params;
-}	Message;
+};
 
 Message		parseMessage(std::string input);
-void		print_message(const Message& msg);
-// void		printAscii(const std::string& str);
+void		printMessage(const Message& msg);
 
 #endif

@@ -1,4 +1,6 @@
-#include "../Irc.hpp"
-#include "../commands.hpp"
+#include "../Server.hpp"
 
-void    notice() {}
+void Server::notice() 
+{
+	
+}

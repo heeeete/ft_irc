@@ -4,36 +4,29 @@
 # define END_CHARACTERS "\r\n"
 # define VALID_CHARACTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890"
 
-# include <sys/types.h>
+# define POLLFD_SIZE 100
+
+# include <iostream>
+# include <cstring>
+# include <cctype>
+# include <cstdlib>
+# include <string>
+# include <ctime>
 # include <sys/socket.h>
 # include <netinet/in.h>
-# include <arpa/inet.h>
-# include <netdb.h>
-# include <cstring>
-# include <cstdlib>
-# include <iostream>
-# include <vector>
-# include <map>
-# include <poll.h>
 # include <unistd.h>
-# include <sstream>
-# include <string>
-# include <cerrno>
-# include <ctime>
-# include <time.h>
+# include <poll.h>
 # include <fcntl.h>
-# include <iterator>
-# include <istream>
+# include <sys/types.h>
+# include <map>
+# include <vector>
+# include <sstream>
 
-// # include "Macro.hpp"
-// # include "Colors.hpp"
-// # include "Numerical_replies.hpp"
-
-// # include "Server.hpp"
-// # include "Client.hpp"
-// # include "Message.hpp"
-// # include "Channel.hpp"
-// # include "commands.hpp"
-
+// # include <sys/types.h>
+// # include <arpa/inet.h>
+// # include <netdb.h>
+// # include <cerrno>
+// # include <iterator>
+// # include <istream>
 
 #endif

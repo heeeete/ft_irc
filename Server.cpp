@@ -1,255 +1,274 @@
 #include "Server.hpp"
-#include "Client.hpp"
-#include "Irc.hpp"
 
-Server::Server(): _name("PPL ft_irc")
+// 생성자에서 서버 소켓을 생성하고 bind, listen 함, pollfd 초기화
+Server::Server(int port, std::string password) :_port(port), _password(password), _name("PPL_IRC")
 {
-}
+	time(&_startTime);
 
-Server::Server( const Server & src )
-{
-    *this = src;
-}
+	_serverSocket = socket(PF_INET, SOCK_STREAM, 0);
+	if (_serverSocket == -1)
+		throw ServerException("Server socket creation failed!");
+	
+	struct sockaddr_in serverAddr;
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(_port);
+    serverAddr.sin_addr.s_addr = INADDR_ANY;
 
-Server::~Server()
-{
-}
-
-Server &				Server::operator=( Server const & rhs )
-{
-	if ( this != &rhs )
+	if (bind(_serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == -1) 
 	{
-		this->_serverSocket = rhs._serverSocket;
-        this->_serverAddr = rhs._serverAddr;
-        this->_port = rhs._port;
-        this->_pwd = rhs._pwd;
-        this->_name = rhs._name;
-        this->_startTime = rhs._startTime;
+        close(_serverSocket); 
+		throw ServerException("Binding failed!");
+    }
+
+	if (listen(_serverSocket, 5) == -1) 
+	{
+        close(_serverSocket);
+		throw ServerException("Listening failed!");
+    }
+
+	fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
+
+	std::cout << "Process ID: " << getpid() << std::endl;
+
+	_pollFd[0].fd = _serverSocket;
+	_pollFd[0].events = POLLIN;
+	_pollFd[0].revents = 0;
+
+	for (int i = 1; i < POLLFD_SIZE; i++)
+		_pollFd[i].fd = -1;
+
+}
+
+Server::~Server() {}
+
+// 클라이언트 이벤트를 기다리고 처리 
+void Server::run()
+{
+	while (1)
+	{
+		int result = poll(_pollFd, POLLFD_SIZE, -1);
+		
+		if (result > 0)
+		{
+			for (int i = 0; i < POLLFD_SIZE; i++)
+			{
+				if (_pollFd[i].fd != -1 && _pollFd[i].revents == POLLIN)
+				{
+					if (i == 0)
+						addClient();
+					else
+						handleReceivedData(i);
+				}
+			}
+		}
 	}
-	return *this;
 }
 
-int				Server::getServerSocket() const {return _serverSocket;}
-int				Server::getPort() const {return _port;}
-std::string		Server::getPassword() const {return _pwd;}
-std::string     Server::getName() const {return _name;}
-time_t const*	Server::getStartTime() const { return &_startTime;}
-std::map<int, Client *>& Server::getClientsList() {return _clientsList;}
-struct pollfd*	Server::getPollFDs() {return _pollFDs;}
-Channel*		Server::getChannel(const std::string channelName) {
-    std::vector<Channel *>::iterator isbegin = _channelList.begin();
+//클라이언트 소켓 추가 
+void Server::addClient()
+{
+	struct sockaddr_in clientAddr;
+	socklen_t addrLen;
 
-    while (isbegin != _channelList.end()) {
-        if ((*isbegin)->getName() == channelName)
-            return *isbegin;
-        isbegin++;
-    }
-    return NULL;
+	int clientSocket = accept(_serverSocket, (struct sockaddr *)&clientAddr, &addrLen);
+	if (clientSocket == -1)
+		throw ServerException("accept failed");
+	fcntl(clientSocket, F_SETFL, O_NONBLOCK);
+	std::cout << "클라이언트 SOCKET FD: " << clientSocket << "\n";
+	
+	Client *client = new Client(clientSocket); //나중에 delete로 지워주기 
+	_clientList.insert(std::pair<int, Client *>(clientSocket, client));
+	
+	for (int i = 1; i < POLLFD_SIZE; i++)
+	{
+		if (_pollFd[i].fd == -1)
+		{
+			_pollFd[i].fd = clientSocket;
+			_pollFd[i].events = POLLIN;
+			_pollFd[i].revents = 0;
+			client->setPollFdIdx(i);
+			std::cout << "connection successful\n";
+			break;
+		}
+	}
 }
-Client*			Server::getClient(const std::string& nickName) {
-    std::map<int, Client*>::iterator isBegin = _clientsList.begin();
 
-    while (isBegin != _clientsList.end()) {
-        if (isBegin->second->getNickName() == nickName)
-            return isBegin->second;
-        isBegin++;
-    }
-    return NULL;
+// 클라이언트로부터 데이터 받아서 처리 
+void Server::handleReceivedData(int pollIdx)
+{
+	std::cout << "클라이언트 이벤트 발생!!\n";
+	
+	char buf[1024];
+	ssize_t bytesReceived = recv(_pollFd[pollIdx].fd, buf, sizeof(buf) - 1, 0);
+	if (bytesReceived <= 0) // 연결 종료 혹은 오류 발생 
+	{
+		close(_pollFd[pollIdx].fd);
+		_pollFd[pollIdx].fd = -1;
+		_clientList.erase(_pollFd[pollIdx].fd);
+	}
+	else
+	{
+		buf[bytesReceived] = '\0';
+		Client *currClient = _clientList[_pollFd[pollIdx].fd]; 
+		currClient->setReadBuf(buf);
+
+		if (currClient->getReadBuf().find(END_CHARACTERS) != std::string::npos)
+			processBuffer(currClient);
+	}
+
 }
 
-bool	Server::nickNameDupCheck(const std::string& nick){
-    std::map<int, Client *>::iterator isbegin = _clientsList.begin();
+// 버퍼에 저장된 데이터 처리 
+void Server::processBuffer(Client *client)
+{
+	std::string buf = client->getReadBuf();
+	if (buf.find_first_of(VALID_CHARACTERS) == std::string::npos)
+		return ;
+	std::cout << "BUF = " << buf << "\n";
 
-    while (isbegin != _clientsList.end()){
-        if (isbegin->second->getNickName() == nick)
+	char *token = strtok(const_cast<char *>(buf.c_str()), END_CHARACTERS);
+	if (token == NULL)
+		return ;
+	std::cout << "token = " << token << "\n";
+	while (token != NULL)
+	{
+		std::string command(token);
+		Message msg = parseMessage(token);
+		printMessage(msg);
+		executeCmd(client, &msg);
+		token = strtok(NULL, END_CHARACTERS);
+	}
+	if (client->isRegistrationRequired()) // 클라이언트 등록되어야할 때  
+		registration(*client);
+	if (client->shouldBeDeleted()) // 클라이언트가 삭제돼야할 때  
+	{
+		close(client->getClientSocket()); //소켓 닫기 
+		_clientList.erase(client->getClientSocket()); // clientList에서 해당 소켓 삭제
+		_pollFd[client->getPollFdIdx()].fd = -1; //pollFd에서 fd 삭제
+		delete client; // 클라이언트 삭제 
+		return ;
+		//quit해도 클라이언트 삭제해줘야 
+	}
+	client->clearReadBuf();
+}
+
+// command 실행
+void Server::executeCmd(Client *client, Message *msg)
+{
+	std::string validCmds[] = {
+		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC", 
+		"MODE", "PART", "QUIT", "PRIVMSG", "NOTICE", "PING", "CAP"
+	};
+
+	int index = 0;
+	while (index < 14 && validCmds[index] != msg->command)
+		index++;
+	
+	switch(index) {
+		case 0: nick(client, msg); break;
+		case 1: user(client, msg); break;
+		case 2: pass(client, msg); break;
+		case 3: join(client, msg); break;
+		case 4: kick(); break;
+		case 5: invite(client, msg); break;
+		case 6: topic(); break;
+		case 7: mode(); break;
+		case 8: part(client, msg); break;
+		case 9: quit(client, msg); break;
+		case 10: privmsg(); break;
+		case 11: notice(); break;
+		case 12: ping(client, msg); break;
+		case 13: cap(client); break; 
+		case 14: break; //맞는 command 없을 때 
+	}
+
+}
+
+bool Server::nicknameDupCheck(const std::string nick)
+{
+	std::map<int, Client *>::iterator iter = _clientList.begin();
+
+    while (iter != _clientList.end()){
+        if (iter->second->getNickname() == nick)
             return true;
-        isbegin++;
+        iter++;
     }
     return false;
 }
 
-int Server::argumentCheck(int argc, char *argv[])
+void Server::registration(Client &client)
 {
-    if (argc != 3) {
-        std::cout << "Argument ERROR : ./ircserv [PORT] [PASSWORD]\n";
-        return (-1);
-    }
-
-    std::string str = argv[1];
-    for (int i = 0; i < static_cast<int>(str.length()); i++) {
-        if (str[i] < '0' || str[i] > '9') {
-            std::cout << "Argument ERROR : Wrong port num\n";
-            return (-1);
-        }
-    }
-
-    unsigned int port_num = std::atoi(argv[1]);
-    if (port_num < 0 || port_num > 65535) {
-        std::cout << "Argument ERROR : Out range of port num (0~65535)\n";
-        return (-1);
-    }
-	this->_port = port_num;
-    this->_pwd = argv[2];
-	return (0);
+	client.sendMsg(RPL_WELCOME(client.getNickname(), client.getUsername(), client.getHostname()));
+	client.sendMsg(RPL_YOURHOST(client.getNickname(), _name, "1.0"));
+	client.sendMsg(RPL_CREATED(client.getNickname(), ctime(&_startTime)));
+	client.sendMsg(RPL_MYINFO(client.getNickname(), _name, "1.0", "Channel modes +ntikl", ""));
+	client.sendMsg(RPL_MOTDSTART(client.getNickname()));
+	client.sendMsg(RPL_MOTD(client.getNickname()));
+	client.sendMsg(RPL_ENDOFMOTD(client.getNickname()));
+	client.setIsRegistered(true);
 }
 
-void	Server::setPollFd(int index, int fd, int events, int revents)
+void Server::createChannel(Client *owner, const std::string& channelName)
 {
-	_pollFDs[index].fd = fd;
-	_pollFDs[index].events = events;
-	_pollFDs[index].revents = revents;
-}
+	std::vector<Channel *>::iterator iter = _channelList.begin();
 
-int Server::setServerSocket()
-{
-    time(&_startTime);
-
-    // 1. 서버 소켓 생성
-    _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (_serverSocket == -1) {
-        std::cerr << "Server socket creation failed!" << std::endl;
-        return -1;
-    }
-
-    // 서버 주소 설정
-    _serverAddr.sin_family = AF_INET;
-    _serverAddr.sin_port = htons(_port); // Port number
-    _serverAddr.sin_addr.s_addr = INADDR_ANY; // 모든 인터페이스에서 듣기
-
-    // 2. Bind
-    if (bind(_serverSocket, (struct sockaddr*)&_serverAddr, sizeof(_serverAddr)) == -1) {
-        std::cerr << "Binding failed!" << std::endl;
-        close(_serverSocket);
-        return -1;
-    }
-
-    // 3. Listen
-    if (listen(_serverSocket, 5) == -1) {
-        std::cerr << "Listening failed!" << std::endl;
-        close(_serverSocket);
-        return -1;
-    }
-
-	std::cout << "Process ID: " << getpid() << std::endl;
-
-	setPollFd(0, _serverSocket, POLLIN, 0);
-
-    for (int i = 1; i < 100 ; i++)
-        setPollFd(i, -1, 0, 0);
-
-	// SET serverSocket in non block mode
-	fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
-
-    socketLoop();
-
-	return (0);
-}
-
-int Server::socketLoop()
-{
-    while (1)
-    {
-        int result = poll(_pollFDs, 100, -1);
-        if (result > 0) {
-            for (int i = 0; i < 100; i++) // 모든 파일 디스크립터를 체크
-            {
-                if (_pollFDs[i].revents & POLLIN) // 이벤트가 발생한 소켓
-                {
-                   checkSockets(i);
-                }
-            }
-        }
-    }
-
-    // 6. Close sockets and finish
-	closeFds();
-
-	return (0);
-}
-
-void Server::checkSockets(int i)
-{
-    struct sockaddr_in clientAddr;
-    socklen_t addrLen;
-
-	if (i == 0) // 서버 소켓
-    {
-        int clientSocket = accept(_serverSocket, (struct sockaddr *)&clientAddr, &addrLen);
-        std::cout << "클라이언트 SOCKET FD: " << clientSocket << "\n";
-        // 새로운 클라이언트 소켓을 pollFDs 배열에 추가
-        for (int j = 1; j < 100; j++)
-        {
-            if (_pollFDs[j].fd == -1)
-            {
-                Client *client = new Client(clientSocket, this); // 새로운 클라이언트 생성
-                _clientsList.insert(std::pair<int , Client *>(client->getClientSocket(), client));
-                setPollFd(j, clientSocket, POLLIN, 0);
-				client->setPollFDsIdx(j);
-                fcntl(clientSocket, F_SETFL, O_NONBLOCK);
-            	std::cout << "connection successful\n";
-                break;
-            }
-        }
-    }
-    else // 클라이언트 소켓
-    {
-        std::cout << "클라이언트 이벤트 발생!!\n";
-        char buffer[1024];
-        ssize_t bytes_received = recv(_pollFDs[i].fd, buffer, sizeof(buffer) - 1, 0);
-        if (bytes_received <= 0)
-        {
-            // 연결 종료 혹은 오류 발생
-			// _clientsList에서도 빼주기
-            close(_pollFDs[i].fd);
-            _pollFDs[i].fd = -1;
-        }
-    	else
-        {
-            buffer[bytes_received] = '\0'; // 문자열 종료 문자 추가
-            _clientsList[_pollFDs[i].fd]->setReadBuf(buffer);
-        }
-    }
-}
-
-void Server::closeFds()
-{
-	close(_serverSocket);
-	// TODO: clients fd 삭제
-}
-
-void	Server::createChannel(Client *owner, const std::string& channelName) {
-    std::vector<Channel *>::iterator isbegin = _channelList.begin();
-
-    while (isbegin != _channelList.end()) {
-        if ((*isbegin)->getName() == channelName) {
-            std::cout << channelName << " 채널이 이미 존재합니다." << std::endl;
-            return;
-        }
-        isbegin++;
-    }
-    try
-    {
-        Channel* newChannel = new Channel(owner, channelName);
-        _channelList.push_back(newChannel);
-        std::cout << channelName << " 채널이 만들어졌습니다." << std::endl;
-    }
-    catch(const std::exception& e)
+	while (iter != _channelList.end())
+	{
+		if ((*iter)->getName() == channelName)
+		{
+			std::cout << channelName << " 채널이 이미 존재합니다." << std::endl;
+			return ; //채널 이미 존재하니까 아무일도 안하고 그냥 나가는 것 
+		}
+		iter++;
+	}
+	try
+	{
+		Channel *newChannel = new Channel(owner, channelName); // 채널 나중에 없앨 때 delete 해주기
+		_channelList.push_back(newChannel);
+		std::cout << channelName << " 채널이 만들어졌습니다." << std::endl;
+	}
+	catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
         return ;
     }
-
 }
 
-void    Server::delChannel(const std::string& channelName)
+void Server::delChannel(const std::string& channelName)
 {
-    for (std::vector<Channel*>::iterator it = _channelList.begin(); it != _channelList.end(); ++it)
+	for (std::vector<Channel *>::iterator it = _channelList.begin(); it != _channelList.end(); ++it)
 	{
 		if ((*it)->getName() == channelName)
+		{
 			_channelList.erase(it);
+			delete *it; //채널 동적할당 해제 추가해줌 
+			return ;
+		}
 	}
 }
 
-// void	Server::addClientToChannel(Client* client, Channel* channel) {
-//     channel->addClient(client);
-// }
+Channel *Server::getChannel(const std::string channelName)
+{
+	std::vector<Channel *>::iterator iter = _channelList.begin();
+
+	while (iter != _channelList.end())
+	{
+		if ((*iter)->getName() == channelName)
+			return *iter;
+		iter++;
+	}
+	return NULL;
+} 
+
+Client *Server::getClient(const std::string& nickname)
+{
+	std::map<int, Client*>::iterator iter = _clientList.begin();
+
+	while (iter != _clientList.end())
+	{
+		if (iter->second->getNickname() == nickname)
+			return (iter->second);
+		iter++;
+	}
+	return (NULL);
+}
