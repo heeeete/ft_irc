@@ -272,3 +272,16 @@ Client *Server::getClient(const std::string& nickname)
 	}
 	return (NULL);
 }
+
+void    Server::delClient(Client* client)
+{
+    for (std::map<int, Client *>::iterator it = _clientList.begin(); it != _clientList.end(); ++it)
+	{
+		if (it->second == client)
+		{
+			_clientList.erase(it);
+			delete (it->second);
+			return ;
+		}
+	}
+}

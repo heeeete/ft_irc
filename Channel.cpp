@@ -50,7 +50,6 @@ void Channel::removeClient(Client *client)
         if ((*iter) == client)
 		{
             _clients.erase(iter);
-        	client->delJoinedChannel(this);
 			break;
 		}
     }

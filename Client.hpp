@@ -64,6 +64,7 @@ public:
 	//채널 관련 함수 
 	void addJoinedChannel(Channel *channel);
 	void delJoinedChannel(Channel *channel);
+	void leaveAllChannels(std::string msg);
 
 	//기타 util 
 	void sendMsg(std::string msg);

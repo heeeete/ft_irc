@@ -40,6 +40,7 @@ void Server::part(Client *client, Message *msg)
             client->sendMsg(RPL_PART(client->getNickname(), client->getUsername(), client->getHostname() , channelName, part_msg));
             client->sendMsgToChannel(RPL_PART(client->getNickname(), client->getUsername(), client->getHostname() , channelName, part_msg), ch);
             ch->removeClient(client);
+            client->delJoinedChannel(ch);
             if (ch->getClients().empty())  // 채널 안에 클라이언트가 0명일 때
                 delChannel(channelName);
             // else if (!ch->getOperators().size()) {    // 채널 안에 operator가 없을 때

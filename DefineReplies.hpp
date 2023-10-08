@@ -30,7 +30,10 @@
 # define USER_JOIN(nick, username, hostname,channelName)			":" + nick + "!" + username + "@" + hostname + " JOIN " + channelName + "\r\n"
 
 /* PART */
-# define RPL_PART(nick, userName, hostName , channel, reason)                ":" + nick + "!" + userName + "@" + hostName + " " + "PART " + channel + " :" + reason + "\r\n"
+# define RPL_PART(nick, userName, hostName, channel, reason)		":" + nick + "!" + userName + "@" + hostName + " " + "PART " + channel + " :" + reason + "\r\n"
+
+/* QUIT */
+# define RPL_QUIT(nick, userName, hostName, reason)                	":" + nick + "!" + userName + "@" + hostName + " " + "QUIT :" + reason + "\r\n"
 
 /* PING PONG */
 # define RPL_PONG(token)								":PPL_IRC PONG " + token + " :PPL_IRC\r\n"
