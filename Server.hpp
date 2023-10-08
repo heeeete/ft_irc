@@ -10,17 +10,17 @@ class Server
 {
 private:
 	int _port; // 포트 번호
-	std::string _password; // 비밀번호 
-	std::string _name; // 서버 이름 
-	time_t _startTime; //서버 시작 시간 
+	std::string _password; // 비밀번호
+	std::string _name; // 서버 이름
+	time_t _startTime; //서버 시작 시간
 
-	int _serverSocket; //서버 소켓 
+	int _serverSocket; //서버 소켓
 	struct pollfd _pollFd[POLLFD_SIZE];
 
-	std::map<int, Client *> _clientList; //소켓fd를 key로 가지는 클라이언트 리스트 
-	std::vector<Channel *> _channelList; // 서버가 가진 채널 리스트 
+	std::map<int, Client *> _clientList; //소켓fd를 key로 가지는 클라이언트 리스트
+	std::vector<Channel *> _channelList; // 서버가 가진 채널 리스트
 
-	// 여러 util 함수들 
+	// 여러 util 함수들
 	void addClient();
 	void handleReceivedData(int pollIdx);
 	void processBuffer(Client *client);
@@ -31,7 +31,7 @@ public:
 	Server(int port, std::string password);
 	~Server();
 
-	void run(); // 서버 시작 
+	void run(); // 서버 시작
 	void registration(Client &client); // 서버에 클라이언트 등록
 
 	// command
@@ -39,14 +39,14 @@ public:
 	void    user(Client *client, Message *msg);
 	void    pass(Client *client, Message *msg);
 	void    join(Client *client, Message *msg);
-	void    kick();
+	void    kick(Client *client, Message *msg);
 	void    invite(Client *client, Message* msg);
-	void    topic();
-	void    mode();
+	void    topic(Client *client, Message *msg);
+	void    mode(Client *client, Message *msg);
 	void    part(Client *client, Message *msg);
 	void    quit(Client *client, Message *msg);
 	void    privmsg(Client *client, Message *msg);
-	void    notice();
+	void    notice(Client *client, Message *msg);
 	void    ping(Client *client, Message *msg);
 	void	cap(Client *client);
 
@@ -59,8 +59,8 @@ public:
 	Client *getClient(const std::string& nickname);
 	void	delClient(Client* client);
 
-	// 예외 클래스 - 예외 생기면 던지기 
-	class ServerException : public std::exception 
+	// 예외 클래스 - 예외 생기면 던지기
+	class ServerException : public std::exception
 	{
 	private:
 		std::string msg;

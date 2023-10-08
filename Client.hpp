@@ -18,18 +18,18 @@ private:
 
 	std::string _readBuf;
 
-	bool _hasValidPassword; // 유효한 비밀번호를 가지고 있는지 
-	bool _isNicknameRegistered; // 닉네임 등록됐는지  
-	bool _isUserinfoRegistered; // 유저정보 등록됐는지  
-	bool _isRegistered; // 최종 등록됐는지 
-	bool _shouldBeDeleted; // 삭제되어야 하는지 
+	bool _hasValidPassword; // 유효한 비밀번호를 가지고 있는지
+	bool _isNicknameRegistered; // 닉네임 등록됐는지
+	bool _isUserinfoRegistered; // 유저정보 등록됐는지
+	bool _isRegistered; // 최종 등록됐는지
+	bool _shouldBeDeleted; // 삭제되어야 하는지
 
 	std::vector<Channel *> _joinedChannels; // 클라이언트가 들어간 채널
 
 public:
 	Client(int clientSocket);
 
-	// readBuf 관련 함수 
+	// readBuf 관련 함수
 	std::string getReadBuf() const;
 	void setReadBuf(const std::string buf);
 	void clearReadBuf();
@@ -61,18 +61,19 @@ public:
 	void setIsRegistered(bool isRegistered);
 	void setShouldBeDeleted(bool shouldBeDeleted);
 
-	//채널 관련 함수 
+	//채널 관련 함수
 	void addJoinedChannel(Channel *channel);
 	void delJoinedChannel(Channel *channel);
 	void leaveAllChannels(std::string msg);
 
-	//기타 util 
+	//기타 util
 	void sendMsg(std::string msg);
 	void sendMsgToChannel(std::string msg, Channel *target);
+	void sendMsgClient(std::string msg, Client *target);
 	bool isRegistrationRequired();
 	void registration();
-	bool isInChannel(std::string channelName); // 해당 클라이언트가 채널 안에 있는지 알려줌  
+	bool isInChannel(std::string channelName); // 해당 클라이언트가 채널 안에 있는지 알려줌
 
 };
 
-#endif 
+#endif

@@ -1,6 +1,6 @@
 #include "../Server.hpp"
 
-void Server::kick() 
+void Server::kick(Client *client, Message *msg)
 {
 
 }

@@ -169,14 +169,14 @@ void Server::executeCmd(Client *client, Message *msg)
 		case 1: user(client, msg); break;
 		case 2: pass(client, msg); break;
 		case 3: join(client, msg); break;
-		case 4: kick(); break;
+		case 4: kick(client, msg); break;
 		case 5: invite(client, msg); break;
-		case 6: topic(); break;
-		case 7: mode(); break;
+		case 6: topic(client, msg); break;
+		case 7: mode(client, msg); break;
 		case 8: part(client, msg); break;
 		case 9: quit(client, msg); break;
 		case 10: privmsg(client, msg); break;
-		case 11: notice(); break;
+		case 11: notice(client, msg); break;
 		case 12: ping(client, msg); break;
 		case 13: cap(client); break;
 		case 14: break; //맞는 command 없을 때

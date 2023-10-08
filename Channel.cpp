@@ -1,7 +1,7 @@
 #include "Channel.hpp"
 
 Channel::Channel(Client* owner, const std::string& channelName)
-	:_name(channelName), _capacityLimit(-1), _mode("+nt") { _operators.push_back(owner); }
+	:_name(channelName), _userLimit(-1), _modes("+nt") { _operators.push_back(owner); }
 Channel::~Channel() {};
 
 std::string Channel::getName() const { return _name; }
@@ -11,14 +11,37 @@ std::vector<std::string> Channel::getKickedUsers() const { return _kickedUsers; 
 std::vector<std::string> Channel::getBannedUsers() const { return _bannedUsers; }
 std::vector<std::string> Channel::getVoicedUsers() const { return _voicedUsers; }
 std::string Channel::getTopic() const { return _topic; }
-std::string Channel::getMode() const { return _mode; }
 std::string Channel::getChannelPassword() const { return _channelPassword; }
-int Channel::getCapacityLimit() const { return _capacityLimit; }
+int Channel::getUserLimit() const { return _userLimit; }
+
+bool Channel::hasMode(char mode) const {
+	if (_modes.find(mode) == std::string::npos)//no encontramos el char
+		return (false);
+	return (true);
+}
+
+bool	Channel::hasClient(Client *client) const {
+	std::vector<Client*>::const_iterator isBegin = _clients.begin();
+	std::string nick = client->getNickname();
+
+	while (isBegin != _clients.end()){
+		if (nick == (*isBegin)->getNickname())
+			return true;
+		isBegin++;
+	}
+	return false;
+}
 
 void Channel::setTopic(std::string topic) { _topic = topic; }
-void Channel::setMode(std::string mode) { _mode = mode; }
+char Channel::setMode(char mode) {
+	if (hasMode(mode))
+		return 0;
+	else
+		_modes.push_back(mode);
+	return mode;
+}
 void Channel::setChannelPassword(std::string password) { _channelPassword = password; }
-void Channel::setCapacityLimit(int limit) { _capacityLimit = limit; }
+void Channel::setCapacityLimit(int limit) { _userLimit = limit; }
 
 std::string Channel::getClientsName()
 {
@@ -80,4 +103,17 @@ bool Channel::isOperator(Client *client)
 		iter++;
 	}
 	return (false);
+}
+
+
+bool	Channel::isInvited(Client *client) const {
+	std::vector<Client*>::const_iterator isBegin = _inviteds.begin();
+	std::string nick = client->getNickname();
+
+	while (isBegin != _inviteds.end()){
+		if (nick == (*isBegin)->getNickname())
+			return true;
+		isBegin++;
+	}
+	return false;
 }

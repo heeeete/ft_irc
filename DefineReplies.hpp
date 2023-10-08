@@ -57,6 +57,10 @@
 # define ERR_NEEDMOREPARAMS(nick, command)			    ":PPL_IRC 461 " + nick + " " + command + " :Not enough parameters\r\n"
 # define ERR_ALREADYREGISTRED(nick)                     ":PPL_IRC 462 " + nick + " :Unauthorized command (already registered)\r\n"
 # define ERR_PASSWDMISMATCH								":PPL_IRC 464 * :Password incorrect\r\n"
+# define ERR_CHANNELISFULL(nick, channelName)			":PPL_IRC 471 " + nick + " " + channelName + " :Cannot join channel (+l)\r\n"
+# define ERR_INVITEONLYCHAN(nick, channelName)			":PPL_IRC 473 " + nick + " " + channelName + " :Cannot join channel (+i)\r\n"
+# define ERR_BANNEDFROMCHAN(nick, channelName)			":PPL_IRC 473 " + nick + " " + channelName + " :Cannot join channel (+b)\r\n"
+# define ERR_BADCHANNELKEY(nick, channelName)			":PPL_IRC 473 " + nick + " " + channelName + " :Cannot join channel (+k)\r\n"
 # define ERR_CHANOPRIVSNEEDED(nick, channelName)		":PPL_IRC 482 " + nick + " " + channelName + " :You're not channel operator\r\n"
 //:irc.local 482 qwe #123 :You must be a channel operator
 
