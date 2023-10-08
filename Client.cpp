@@ -61,6 +61,12 @@ void Client::sendMsg(std::string msg)
 	std::cout << msg << "\n\n";
 }
 
+void	Client::sendMsgClient(std::string msg, Client *target)
+{
+	if (send(target->getClientSocket(), msg.c_str(), msg.length(), 0) < 0)
+			perror("SEND FAILED");
+}
+
 // 등록 과정 필요한지 알려줌
 bool Client::isRegistrationRequired()
 {
@@ -92,4 +98,4 @@ bool Client::isInChannel(std::string channelName)
 		iter++;
 	}
 	return (false);
-} 
+}

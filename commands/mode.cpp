@@ -1,6 +1,6 @@
 #include "../Server.hpp"
 
-void Server::mode() 
+void Server::mode(Client *client, Message *msg)
 {
-	
+
 }

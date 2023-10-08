@@ -4,8 +4,9 @@
 
 void Server::join(Client *client, Message *msg)
 {
+	std::string			nick = client->getNickname();
 	if (msg->params.empty())
-		client->sendMsg(ERR_NEEDMOREPARAMS(client->getNickname(), msg->command));
+		client->sendMsg(ERR_NEEDMOREPARAMS(nick, msg->command));
 
 	std::stringstream	ss(msg->params[0]);
 	std::string			channelName;
@@ -13,12 +14,12 @@ void Server::join(Client *client, Message *msg)
 	{
 		if (client->getJoinedChannels().size() >= MAX_JOINED_CHANNEL)
 		{
-			client->sendMsg(ERR_TOOMANYCHANNELS(client->getNickname(), channelName));
+			client->sendMsg(ERR_TOOMANYCHANNELS(nick, channelName));
 			return ;
 		}
 		if ((channelName[0] != '&' && channelName[0] != '#') || channelName.length() > 200 || channelName.find(" ") != std::string::npos )
 		{
-			client->sendMsg(ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
+			client->sendMsg(ERR_NOSUCHCHANNEL(nick, channelName));
 			continue;
 		}
 		std::cout << "채널 이름 : " << channelName << "\n";
@@ -31,13 +32,29 @@ void Server::join(Client *client, Message *msg)
 		}
 		else
 		{
+			// ch->hasMode('i');
+			// if (ch->hasMode('k'))
+			// {
+			// 	if (msg->params.size() < 2 || !ch->isValidKey(m->params[1]))
+			// 		return (sendReply(475, chan, "", "", ""));
+			// }		채널 패스워드 확인 근데 지금 채널 패스워드 기능 없어서 안함
+			std::cout << "11111\n";
+			if (ch->hasMode('i') && !ch->isInvited(client))	//채널 모드가 i 일때 초대받은 클라이언트만 가능
+				return (client->sendMsg(ERR_INVITEONLYCHAN(nick, channelName)));
+				std::cout << "2222\n";
+			if (ch->hasMode('l') && ch->getClients().size() >= ch->getUserLimit())	//유저 인원 제한
+				return (client->sendMsg(ERR_CHANNELISFULL(nick, channelName)));
+			std::cout << "33333\n";
+			if (ch->hasClient(client))												//이미 있는 유저인지 확인
+				return (client->sendMsg(ERR_USERONCHANNEL(nick, nick, channelName)));
+			std::cout << "44444\n";
 			ch->addClient(client);
-			std::cout << client->getNickname() << ' ' << ch->getName() << "접속\n";
+			std::cout << nick << ' ' << ch->getName() << "접속\n";
 		}
-		client->sendMsgToChannel(USER_JOIN(client->getNickname(), client->getUsername(), client->getHostname(), ch->getName()), ch);
-		client->sendMsg(USER_JOIN(client->getNickname(), client->getUsername(), client->getHostname(), ch->getName()));
+		client->sendMsgToChannel(USER_JOIN(nick, client->getUsername(), client->getHostname(), ch->getName()), ch);
+		client->sendMsg(USER_JOIN(nick, client->getUsername(), client->getHostname(), ch->getName()));
 		//REPLY
-		client->sendMsg(RPL_NAMREPLY(client->getNickname(), ch->getName(), ch->getClientsName()));
-		client->sendMsg(RPL_ENDOFNAMES(client->getNickname(), ch->getName()));
+		client->sendMsg(RPL_NAMREPLY(nick, ch->getName(), ch->getClientsName()));
+		client->sendMsg(RPL_ENDOFNAMES(nick, ch->getName()));
 	}
 }

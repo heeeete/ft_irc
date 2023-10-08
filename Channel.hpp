@@ -10,6 +10,7 @@ class Channel
 {
 private:
 	std::string _name; // 채널 이름
+	std::string _modes;
 	std::vector<Client *> _clients; // 채널에 속한 클라이언트들
 	std::vector<Client *> _operators; //채널 오퍼레이터들
 	std::vector<Client *> _inviteds;
@@ -19,9 +20,8 @@ private:
 	std::vector<std::string> _voicedUsers;
 
 	std::string _topic;
-	std::string _mode;
 	std::string _channelPassword;
-	int _capacityLimit; // 뭔지 모르겠음
+	int _userLimit;
 
 public:
 	Channel(Client* owner, const std::string& channelName);
@@ -35,15 +35,18 @@ public:
 	std::vector<std::string> getBannedUsers() const;
 	std::vector<std::string> getVoicedUsers() const;
 	std::string getTopic() const;
-	std::string getMode() const;
 	std::string getChannelPassword() const;
-	int getCapacityLimit() const;
+	int getUserLimit() const;
+
 
 	// setter
 	void setTopic(std::string topic);
-	void setMode(std::string mode);
+	char setMode(char mode);
 	void setChannelPassword(std::string password);
 	void setCapacityLimit(int limit);
+
+	bool	hasMode(char mode) const;
+	bool	hasClient(Client *client) const;
 
 	std::string getClientsName(); // 채널에 속한 클라이언트 이름들 가공
 	void addClient(Client *client);
@@ -51,7 +54,8 @@ public:
 	void removeClient(Client *client);
 	void removeOperator(Client* client);
 
-	bool isOperator(Client *client);
+	bool	isOperator(Client *client);
+	bool	isInvited(Client *client) const;
 };
 
 #endif
