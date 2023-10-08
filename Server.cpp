@@ -241,7 +241,6 @@ void Server::delChannel(const std::string& channelName)
 		if ((*it)->getName() == channelName)
 		{
 			_channelList.erase(it);
-			delete *it; //채널 동적할당 해제 추가해줌
 			return ;
 		}
 	}
