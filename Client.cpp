@@ -42,12 +42,11 @@ void Client::setShouldBeDeleted(bool shouldBeDeleted) { _shouldBeDeleted = shoul
 void Client::addJoinedChannel(Channel *channel) { _joinedChannels.push_back(channel); }
 void Client::delJoinedChannel(Channel *channel)
 {
-	for (std::vector<Channel *>::iterator iter = _joinedChannels.begin(); iter != _joinedChannels.end(); iter++)
+	for (std::vector<Channel *>::iterator iter = _joinedChannels.begin(); iter != _joinedChannels.end(); ++iter)
 	{
 		if ((*iter) == channel)
 		{
 			_joinedChannels.erase(iter);
-			delete *iter; //맞나?
 			return ;
 		}
 	}

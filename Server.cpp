@@ -241,6 +241,7 @@ void Server::delChannel(const std::string& channelName)
 		if ((*it)->getName() == channelName)
 		{
 			_channelList.erase(it);
+			delete (*it);
 			return ;
 		}
 	}
