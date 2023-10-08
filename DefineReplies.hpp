@@ -32,6 +32,9 @@
 /* PART */
 # define RPL_PART(nick, userName, hostName , channel, reason)                ":" + nick + "!" + userName + "@" + hostName + " " + "PART " + channel + " :" + reason + "\r\n"
 
+/* PRIVMSG */
+# define RPL_PRIVMSG(nick, userName, hostName, receiver, msg) ":" + nick + "!" + userName + "@" + hostName + " " + "PRIVMSG  " + receiver + " :" + msg + "\r\n"
+
 /* PING PONG */
 # define RPL_PONG(token)								":PPL_IRC PONG " + token + " :PPL_IRC\r\n"
 //:irc.local PONG irc.local :irc.local

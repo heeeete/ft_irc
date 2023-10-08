@@ -175,7 +175,7 @@ void Server::executeCmd(Client *client, Message *msg)
 		case 7: mode(); break;
 		case 8: part(client, msg); break;
 		case 9: quit(client, msg); break;
-		case 10: privmsg(); break;
+		case 10: privmsg(client, msg); break;
 		case 11: notice(); break;
 		case 12: ping(client, msg); break;
 		case 13: cap(client); break;

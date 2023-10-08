@@ -46,7 +46,7 @@ public:
 	void    mode();
 	void    part(Client *client, Message *msg);
 	void    quit(Client *client, Message *msg);
-	void    privmsg();
+	void    privmsg(Client *client, Message *msg);
 	void    notice();
 	void    ping(Client *client, Message *msg);
 	void	cap(Client *client);
