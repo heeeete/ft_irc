@@ -42,8 +42,9 @@
 # define RPL_PONG(token)								":PPL_IRC PONG " + token + " :PPL_IRC\r\n"
 //:irc.local PONG irc.local :irc.local
 /* ERROR */
-# define ERR_NOSUCHNICK(nick)							":PPL_IRC 401 " + nick + " " + nick + " :No such nick/channel\r\n" //닉네임 못찾음
+# define ERR_NOSUCHNICK(nick, targetNick)							":PPL_IRC 401 " + nick + " " + targetNick + " :No such nick/channel\r\n" //닉네임 못찾음
 # define ERR_NOSUCHCHANNEL(nick, channelName)			":PPL_IRC 403 " + nick + " " + channelName + " :No such channel\r\n" //유효하지 않은 채널 이름
+# define ERR_CANNOTSENDTOCHAN(nick, channelName)		":PPL_IRC 404 " + nick + " " + channelName + " :Cannot send to channel\r\n" //유저가 속하지 않은 채널에 메세지 보낼 때
 # define ERR_TOOMANYCHANNELS(nick, channelName)			":PPL_IRC 405 " + nick + " " + channelName + " :You have joined too many channels\r\n" //유저가 4개 이상의 채널에 접속
 # define ERR_NOORIGIN                                   ":PPL_IRC 409 * :No origin specified\r\n" //ping 에러
 

@@ -81,3 +81,15 @@ void Client::sendMsgToChannel(std::string msg, Channel *target)
 		iter++;
 	}
 }
+
+bool Client::isInChannel(std::string channelName)
+{
+	std::vector<Channel *>::iterator iter = _joinedChannels.begin();
+	while (iter != _joinedChannels.end())
+	{
+		if ((*iter)->getName() == channelName)
+			return (true);
+		iter++;
+	}
+	return (false);
+} 

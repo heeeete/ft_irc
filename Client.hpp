@@ -71,6 +71,7 @@ public:
 	void sendMsgToChannel(std::string msg, Channel *target);
 	bool isRegistrationRequired();
 	void registration();
+	bool isInChannel(std::string channelName); // 해당 클라이언트가 채널 안에 있는지 알려줌  
 
 };
 
