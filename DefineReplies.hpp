@@ -2,9 +2,10 @@
 # define DEFINEREPLIES_HPP
 
 /* WELCOME */
-# define RPL_WELCOME(nick, user, host)                  	":PPL_IRC 001 " + nick + " :Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n"
-# define RPL_YOURHOST(nick, servername, ver)				":PPL_IRC 002 " + nick + " :Your host is " + servername + ", running version " + ver + "\r\n"
-# define RPL_CREATED(nick, _startTime)                      ":PPL_IRC 003 " + nick + " :This server was created " + _startTime + "\r\n"
+# define RPL_WELCOME(nick, user, host)									":PPL_IRC 001 " + nick + " :Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n"
+# define RPL_YOURHOST(nick, servername, ver)							":PPL_IRC 002 " + nick + " :Your host is " + servername + ", running version " + ver + "\r\n"
+# define RPL_CREATED(nick, _startTime)									":PPL_IRC 003 " + nick + " :This server was created " + _startTime + "\r\n"
+
 # define RPL_MYINFO(nick, servername, version, channelModes, userModes) ":PPL_IRC 004 " + nick + " :" + servername + " " + version + " " + channelModes + " " + userModes + "\r\n"
 
 /*MOTD*/
@@ -36,19 +37,23 @@
 # define RPL_PART(nick, userName, hostName, channel, reason)		":" + nick + "!" + userName + "@" + hostName + " " + "PART " + channel + " :" + reason + "\r\n"
 
 /* QUIT */
-# define RPL_QUIT(nick, userName, hostName, reason)                	":" + nick + "!" + userName + "@" + hostName + " " + "QUIT :" + reason + "\r\n"
+# define RPL_QUIT(nick, userName, hostName, reason)					":" + nick + "!" + userName + "@" + hostName + " " + "QUIT :" + reason + "\r\n"
 
 /* PRIVMSG */
-# define RPL_PRIVMSG(nick, userName, hostName, receiver, msg) 		":" + nick + "!" + userName + "@" + hostName + " " + "PRIVMSG  " + receiver + " :" + msg + "\r\n"
-
+# define RPL_PRIVMSG(nick, userName, hostName, receiver, msg)		":" + nick + "!" + userName + "@" + hostName + " " + "PRIVMSG  " + receiver + " :" + msg + "\r\n"
 /* TOPIC */
 # define RPL_NOTOPIC(nick, channel) 								":PPL_IRC 331 " + nick + " " + channel + " :No topic is set\r\n"	// topic 설정 안했을 때
 # define RPL_TOPIC(nick, channel, topic) 							":PPL_IRC 332 " + nick + " " + channel + " :" + topic + "\r\n"		// topic 설정 했을 때
 # define RPL_SET_TOPIC(nick, userName, hostName, channel, topic)	":" + nick + "!" + userName + "@" + hostName + " " + "TOPIC " + channel + " :" + topic + "\r\n"	// topic 설정
 
 /* PING PONG */
-# define RPL_PONG(token)								":PPL_IRC PONG " + token + " :PPL_IRC\r\n"
+# define RPL_PONG(token)											":PPL_IRC PONG " + token + " :PPL_IRC\r\n"
 //:irc.local PONG irc.local :irc.local
+
+
+/* MODE */
+# define RPL_CHANNELMODEIS(nick, channelName, mode)					":PPL_IRC 324 " + nick + " " + channelName + " :" + mode + "\r\n" //유효하지 않은 채널 이름
+
 
 /* ERROR */
 # define ERR_NOSUCHNICK(nick, targetNick)				":PPL_IRC 401 " + nick + " " + targetNick + " :No such nick\r\n" //닉네임 못찾음
@@ -56,22 +61,24 @@
 # define ERR_CANNOTSENDTOCHAN(nick, channelName)		":PPL_IRC 404 " + nick + " " + channelName + " :Cannot send to channel\r\n" //유저가 속하지 않은 채널에 메세지 보낼 때
 # define ERR_TOOMANYCHANNELS(nick, channelName)			":PPL_IRC 405 " + nick + " " + channelName + " :You have joined too many channels\r\n" //유저가 4개 이상의 채널에 접속
 # define ERR_NOORIGIN                                   ":PPL_IRC 409 * :No origin specified\r\n" //ping 에러
-
 # define ERR_NONICKNAMEGIVEN(nick)						":PPL_IRC 431 " + nick + " " + ":No nickname given\r\n" //공백 닉네임
 # define ERR_ERRONEUSNICKNAME(nick, rejectedNickname)	":PPL_IRC 432 " + nick + " " + rejectedNickname + " :Erroneus nickname\r\n" //특수문자 닉네임
 # define ERR_NICKNAMEINUSE(nick, rejectedNickname)		":PPL_IRC 433 " + nick + " " + rejectedNickname + " :Nickname is already in use\r\n" //중복된 닉네임
-# define ERR_USERNOTINCHANNEL(nick, channel) 			":PPL_IRC 441 " + nick + " " + channel + " :They aren't on that channel"	// 강퇴하려는 멤버가 채널에 없을 때
+# define ERR_USERNOTINCHANNEL(nick, targetNick,channelName)			":PPL_IRC 441 " + nick + " " + targetNick + " " + channelName + " :They aren't on that channel\r\n"	//클라이언트가 채널에 없을때
 # define ERR_NOTONCHANNEL(nick, channelName)			":PPL_IRC 442 " + nick + " " + channelName + " :You're not on that channel\r\n"	//클라이언트가 멤버가 아닌 채널 이펙트 명령을 수행하려고 할 때
 # define ERR_USERONCHANNEL(nick, toInviteNick, channelName)			":PPL_IRC 443 " + nick + " " + toInviteNick + " " + channelName + " :is already on channel\r\n"	//클라이언트가 이미 해당 채널에 있음
-# define ERR_NOTREGISTERED								":PPL_IRC 451 * :You have not registered\r\n"
-# define ERR_NEEDMOREPARAMS(nick, command)			    ":PPL_IRC 461 " + nick + " " + command + " :Not enough parameters\r\n"
-# define ERR_ALREADYREGISTRED(nick)                     ":PPL_IRC 462 " + nick + " :Unauthorized command (already registered)\r\n"
-# define ERR_PASSWDMISMATCH								":PPL_IRC 464 * :Password incorrect\r\n"
-# define ERR_CHANNELISFULL(nick, channelName)			":PPL_IRC 471 " + nick + " " + channelName + " :Cannot join channel (+l)\r\n"
-# define ERR_INVITEONLYCHAN(nick, channelName)			":PPL_IRC 473 " + nick + " " + channelName + " :Cannot join channel (+i)\r\n"
-# define ERR_BANNEDFROMCHAN(nick, channelName)			":PPL_IRC 473 " + nick + " " + channelName + " :Cannot join channel (+b)\r\n"
-# define ERR_BADCHANNELKEY(nick, channelName)			":PPL_IRC 473 " + nick + " " + channelName + " :Cannot join channel (+k)\r\n"
-# define ERR_CHANOPRIVSNEEDED(nick, channelName)		":PPL_IRC 482 " + nick + " " + channelName + " :You're not channel operator\r\n"
+# define ERR_NOTREGISTERED											":PPL_IRC 451 * :You have not registered\r\n"
+# define ERR_NEEDMOREPARAMS(nick, command)			    			":PPL_IRC 461 " + nick + " " + command + " :Not enough parameters\r\n"
+# define ERR_ALREADYREGISTRED(nick)                     			":PPL_IRC 462 " + nick + " :Unauthorized command (already registered)\r\n"
+# define ERR_PASSWDMISMATCH											":PPL_IRC 464 * :Password incorrect\r\n"
+# define ERR_CHANNELISFULL(nick, channelName)						":PPL_IRC 471 " + nick + " " + channelName + " :Cannot join channel (+l)\r\n"
+# define ERR_UNKNOWNMODE(nick, mode)								":PPL_IRC 472 " + nick + " " + mode + " :is unknown mode char to me\r\n"
+# define ERR_INVITEONLYCHAN(nick, channelName)						":PPL_IRC 473 " + nick + " " + channelName + " :Cannot join channel (+i)\r\n"
+# define ERR_BANNEDFROMCHAN(nick, channelName)						":PPL_IRC 474 " + nick + " " + channelName + " :Cannot join channel (+b)\r\n"
+# define ERR_BADCHANNELKEY(nick, channelName)						":PPL_IRC 475 " + nick + " " + channelName + " :Cannot join channel (+k)\r\n"
+# define ERR_CHANOPRIVSNEEDED(nick, channelName)					":PPL_IRC 482 " + nick + " " + channelName + " :You're not channel operator\r\n"
+# define ERR_NOLIMIT(nick, channelName) 							":PPL_IRC 696 " + nick + " " + channelName + " l * :You must specify a parameter for the limit mode. Syntax: <limit>.\r\n"
+# define ERR_NONICK(nick, channelName) 								":PPL_IRC 696 " + nick + " " + channelName + " l * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n"
 //:irc.local 482 qwe #123 :You must be a channel operator
 
 #endif
