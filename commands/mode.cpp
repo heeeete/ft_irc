@@ -111,7 +111,7 @@ void Server::channelModes(Client *client, Message *msg) {
 
 		default:
 			error = *isBegin;
-			modes.erase(modes.find(error, 1));
+			modes.erase(modes.find(error, 1), 1);
 			std::cout << modes << "\n";
 			client->sendMsg(ERR_UNKNOWNMODE(nick, error));
 			continue;
