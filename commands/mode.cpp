@@ -32,6 +32,7 @@ void Server::channelModes(Client *client, Message *msg) {
 		return (client->sendMsg(ERR_CHANOPRIVSNEEDED(nick, channelName)));
 
 	size_t arg_n = 2;
+	size_t cnt = 0;
 	char sign = modes[0];
 	std::string args;
 	std::string error;
@@ -42,20 +43,25 @@ void Server::channelModes(Client *client, Message *msg) {
 			sign = '+';
 		else if ((*isBegin) == '-')
 			sign = '-';
-		std::cout << (*isBegin) << "\n";
 		switch ((*isBegin))
 		{
 		case 'n':
+			++cnt;
+			break;
 		case 't':
+			++cnt;
+			break;
 		case '+':
 		case '-':
 		case 'i':
+			++cnt;
 			if (sign == '+')
 				ch->setMode('i');
 			else if (sign == '-')
 				ch->unSetMode('i');
 		break;
 		case 'l':
+			++cnt;
 			if (sign == '+')
 			{
 				if (msg->params.size() < arg_n + 1)
@@ -71,21 +77,18 @@ void Server::channelModes(Client *client, Message *msg) {
 				ch->unSetMode('l');
 		break;
 		case 'o':
+			++cnt;
 			if (msg->params.size() < arg_n + 1)
 			{
 				client->sendMsg(ERR_NONICK(nick,channelName));
 				break;
 			}
 			oper = getClient((msg->params[arg_n]));
-			if (!oper){
+			if (!oper)
 				client->sendMsg(ERR_NOSUCHNICK(nick, msg->params[arg_n]));
-				break;
-			}
-			if (!ch->hasClient(oper)){
+			else if (!ch->hasClient(oper))
 				client->sendMsg(ERR_USERNOTINCHANNEL(nick, oper->getNickname(), channelName));
-				break;
-			}
-			if (sign == '+')
+			else if (sign == '+')
 				ch->addOperator(oper);
 			else if (sign == '-')
 				ch->removeOperator(oper);
@@ -93,12 +96,10 @@ void Server::channelModes(Client *client, Message *msg) {
 			++arg_n;
 		break;
 		case 'k':
+			++cnt;
 			if (msg->params.size() < arg_n + 1)
-			{
 				client->sendMsg(ERR_NONICK(nick,channelName));
-				break;
-			}
-			if (sign == '+'){
+			else if (sign == '+'){
 				ch->setMode('k');
 				ch->setChannelPassword(msg->params[arg_n]);
 				args += msg->params[arg_n] + " ";
@@ -112,16 +113,15 @@ void Server::channelModes(Client *client, Message *msg) {
 		default:
 			error = *isBegin;
 			modes.erase(modes.find(error, 1), 1);
-			std::cout << modes << "\n";
 			client->sendMsg(ERR_UNKNOWNMODE(nick, error));
 			continue;
 		}
 		isBegin++;
 	}
 	std::string	temp;
-	if (args.empty())
+	if (args.empty() && cnt)
 		temp = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + " " + "MODE " + channelName + " :" + modes + END_CHARACTERS;
-	else
+	else if (cnt)
 		temp = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + " " + "MODE " + channelName + " " + modes + " :" + args + END_CHARACTERS;
 	client->sendMsgToChannel(temp, ch);
 	client->sendMsg(temp);
