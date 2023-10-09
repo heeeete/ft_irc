@@ -11,7 +11,7 @@ static int checkJoinedChannels(Client* client, std::string &channelName)
     return (0);
 }
 
-std::string getPartMsg(Message *msg)
+static std::string getPartMsg(Message *msg)
 {
     std::string m = "See ya!";
 	if (msg->params.size() == 1) // PART_MSG not_defined
