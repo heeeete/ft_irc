@@ -15,10 +15,6 @@ private:
 	std::vector<Client *> _operators; //채널 오퍼레이터들
 	std::vector<Client *> _inviteds;
 
-	std::vector<std::string> _kickedUsers;
-	std::vector<std::string> _bannedUsers;
-	std::vector<std::string> _voicedUsers;
-
 	std::string _topic;
 	std::string _channelPassword;
 	size_t _userLimit;
@@ -32,9 +28,6 @@ public:
 	std::string getModes() const;
 	std::vector<Client *> getClients() const;
 	std::vector<Client *> getOperators() const;
-	std::vector<std::string> getKickedUsers() const;
-	std::vector<std::string> getBannedUsers() const;
-	std::vector<std::string> getVoicedUsers() const;
 	std::string getTopic() const;
 	std::string getChannelPassword() const;
 	size_t getUserLimit() const;

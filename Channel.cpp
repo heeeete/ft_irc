@@ -8,9 +8,6 @@ std::string Channel::getName() const { return _name; }
 std::string Channel::getModes() const { return _modes; }
 std::vector<Client *> Channel::getClients() const {return _clients; }
 std::vector<Client *> Channel::getOperators() const {return _operators; }
-std::vector<std::string> Channel::getKickedUsers() const { return _kickedUsers; }
-std::vector<std::string> Channel::getBannedUsers() const { return _bannedUsers; }
-std::vector<std::string> Channel::getVoicedUsers() const { return _voicedUsers; }
 std::string Channel::getTopic() const { return _topic; }
 std::string Channel::getChannelPassword() const { return _channelPassword; }
 size_t Channel::getUserLimit() const { return _userLimit; }
