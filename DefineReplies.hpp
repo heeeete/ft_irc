@@ -2,9 +2,9 @@
 # define DEFINEREPLIES_HPP
 
 /* WELCOME */
-# define RPL_WELCOME(nick, user, host)                  ":PPL_IRC 001 " + nick + " :Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n"
-# define RPL_YOURHOST(nick, servername, ver)                  ":PPL_IRC 002 " + nick + " :Your host is " + servername + ", running version " + ver + "\r\n"
-# define RPL_CREATED(nick, _startTime)                        ":PPL_IRC 003 " + nick + " :This server was created " + _startTime + "\r\n"
+# define RPL_WELCOME(nick, user, host)                  	":PPL_IRC 001 " + nick + " :Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n"
+# define RPL_YOURHOST(nick, servername, ver)				":PPL_IRC 002 " + nick + " :Your host is " + servername + ", running version " + ver + "\r\n"
+# define RPL_CREATED(nick, _startTime)                      ":PPL_IRC 003 " + nick + " :This server was created " + _startTime + "\r\n"
 # define RPL_MYINFO(nick, servername, version, channelModes, userModes) ":PPL_IRC 004 " + nick + " :" + servername + " " + version + " " + channelModes + " " + userModes + "\r\n"
 
 /*MOTD*/
@@ -25,8 +25,8 @@
 //:irc.local 341 zxc qwe :#123
 
 // JOIN
-# define RPL_NAMREPLY(nick, channelName, names) 		":PPL_IRC 353 " + nick + " = " + channelName + " :" + names + "\r\n"
-# define RPL_ENDOFNAMES(nick, channelName) 				":PPL_IRC 366 " + nick + " " + channelName + " :End of /NAMES list.\r\n"
+# define RPL_NAMREPLY(nick, channelName, names) 					":PPL_IRC 353 " + nick + " = " + channelName + " :" + names + "\r\n"
+# define RPL_ENDOFNAMES(nick, channelName) 							":PPL_IRC 366 " + nick + " " + channelName + " :End of /NAMES list.\r\n"
 # define USER_JOIN(nick, username, hostname,channelName)			":" + nick + "!" + username + "@" + hostname + " JOIN " + channelName + "\r\n"
 
 /* KICK */
@@ -39,14 +39,19 @@
 # define RPL_QUIT(nick, userName, hostName, reason)                	":" + nick + "!" + userName + "@" + hostName + " " + "QUIT :" + reason + "\r\n"
 
 /* PRIVMSG */
-# define RPL_PRIVMSG(nick, userName, hostName, receiver, msg) ":" + nick + "!" + userName + "@" + hostName + " " + "PRIVMSG  " + receiver + " :" + msg + "\r\n"
+# define RPL_PRIVMSG(nick, userName, hostName, receiver, msg) 		":" + nick + "!" + userName + "@" + hostName + " " + "PRIVMSG  " + receiver + " :" + msg + "\r\n"
+
+/* TOPIC */
+# define RPL_NOTOPIC(nick, channel) 								":PPL_IRC 331 " + nick + " " + channel + " :No topic is set\r\n"	// topic 설정 안했을 때
+# define RPL_TOPIC(nick, channel, topic) 							":PPL_IRC 332 " + nick + " " + channel + " :" + topic + "\r\n"		// topic 설정 했을 때
+# define RPL_SET_TOPIC(nick, userName, hostName, channel, topic)	":" + nick + "!" + userName + "@" + hostName + " " + "TOPIC " + channel + " :" + topic + "\r\n"	// topic 설정
 
 /* PING PONG */
 # define RPL_PONG(token)								":PPL_IRC PONG " + token + " :PPL_IRC\r\n"
 //:irc.local PONG irc.local :irc.local
 
 /* ERROR */
-# define ERR_NOSUCHNICK(nick, targetNick)							":PPL_IRC 401 " + nick + " " + targetNick + " :No such nick\r\n" //닉네임 못찾음
+# define ERR_NOSUCHNICK(nick, targetNick)				":PPL_IRC 401 " + nick + " " + targetNick + " :No such nick\r\n" //닉네임 못찾음
 # define ERR_NOSUCHCHANNEL(nick, channelName)			":PPL_IRC 403 " + nick + " " + channelName + " :No such channel\r\n" //유효하지 않은 채널 이름
 # define ERR_CANNOTSENDTOCHAN(nick, channelName)		":PPL_IRC 404 " + nick + " " + channelName + " :Cannot send to channel\r\n" //유저가 속하지 않은 채널에 메세지 보낼 때
 # define ERR_TOOMANYCHANNELS(nick, channelName)			":PPL_IRC 405 " + nick + " " + channelName + " :You have joined too many channels\r\n" //유저가 4개 이상의 채널에 접속
