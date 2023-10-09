@@ -179,7 +179,7 @@ void Server::executeCmd(Client *client, Message *msg)
 		case 11: notice(client, msg); break;
 		case 12: ping(client, msg); break;
 		case 13: cap(client); break;
-		case 14: break; //맞는 command 없을 때
+		default: break; //맞는 command 없을 때
 	}
 
 }
