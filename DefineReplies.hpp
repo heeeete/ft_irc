@@ -79,7 +79,7 @@
 # define ERR_BADCHANNELKEY(nick, channelName)							":PPL_IRC 475 " + nick + " " + channelName + " :Cannot join channel (+k)\r\n"
 # define ERR_CHANOPRIVSNEEDED(nick, channelName)						":PPL_IRC 482 " + nick + " " + channelName + " :You're not channel operator\r\n"
 # define ERR_NOLIMIT(nick, channelName) 								":PPL_IRC 696 " + nick + " " + channelName + " l * :You must specify a parameter for the limit mode. Syntax: <limit>.\r\n"
-# define ERR_NONICK(nick, channelName) 									":PPL_IRC 696 " + nick + " " + channelName + " l * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n"
-# define ERR_NOKEY(nick, channelName) 									":PPL_IRC 696 " + nick + " " + channelName + " l * :You must specify a parameter for the key mode. Syntax: <key>.\r\n"
+# define ERR_NONICK(nick, channelName) 									":PPL_IRC 696 " + nick + " " + channelName + " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n"
+# define ERR_NOKEY(nick, channelName) 									":PPL_IRC 696 " + nick + " " + channelName + " k * :You must specify a parameter for the key mode. Syntax: <key>.\r\n"
 
 #endif
