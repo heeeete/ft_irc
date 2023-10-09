@@ -32,6 +32,7 @@ void Server::channelModes(Client *client, Message *msg) {
 		return (client->sendMsg(ERR_CHANOPRIVSNEEDED(nick, channelName)));
 
 	size_t arg_n = 2;
+	size_t cnt = 0;
 	char sign = modes[0];
 	std::string args;
 	std::string error;
@@ -44,15 +45,26 @@ void Server::channelModes(Client *client, Message *msg) {
 			sign = '-';
 		switch ((*isBegin)) {
 			case 'n':
+				++cnt;
+				break;
 			case 't':
+				++cnt;
+				if (sign == '+')
+					ch->setMode('t');
+				else if (sign == '-')
+					ch->unSetMode('t');
+				break;
 			case '+':
+				break;
 			case '-':
+				break;
 			case 'i':
 				if (sign == '+')
 					ch->setMode('i');
 				else if (sign == '-')
 					ch->unSetMode('i');
-			break;
+				++cnt;
+				break;
 			case 'l':
 				if (sign == '+')
 				{
@@ -67,7 +79,8 @@ void Server::channelModes(Client *client, Message *msg) {
 				}
 				else if (sign == '-')
 					ch->unSetMode('l');
-			break;
+				++cnt;
+				break;
 			case 'o':
 				if (msg->params.size() < arg_n + 1)
 				{
@@ -75,37 +88,31 @@ void Server::channelModes(Client *client, Message *msg) {
 					break;
 				}
 				oper = getClient((msg->params[arg_n]));
-				if (!oper){
+				if (!oper)
 					client->sendMsg(ERR_NOSUCHNICK(nick, msg->params[arg_n]));
-					break;
-				}
-				if (!ch->hasClient(oper)){
+				else if (!ch->hasClient(oper))
 					client->sendMsg(ERR_USERNOTINCHANNEL(nick, oper->getNickname(), channelName));
-					break;
-				}
-				if (sign == '+')
+				else if (sign == '+')
 					ch->addOperator(oper);
 				else if (sign == '-')
 					ch->removeOperator(oper);
 				args += msg->params[arg_n] + " ";
+				++cnt;
 				++arg_n;
-			break;
+				break;
 			case 'k':
 				if (msg->params.size() < arg_n + 1)
-				{
 					client->sendMsg(ERR_NONICK(nick,channelName));
-					break;
-				}
-				if (sign == '+'){
+				else if (sign == '+'){
 					ch->setMode('k');
 					ch->setChannelPassword(msg->params[arg_n]);
 					args += msg->params[arg_n] + " ";
 					++arg_n;
 				}
-				else if (sign == '-') {
+				else if (sign == '-')
 					ch->unSetMode('k');
-				}
-			break;
+				++cnt;
+				break;
 			default:
 				error = *isBegin;
 				modes.erase(modes.find(error, 1), 1);
@@ -115,12 +122,14 @@ void Server::channelModes(Client *client, Message *msg) {
 		isBegin++;
 	}
 	std::string	temp;
-	if (args.empty())
+	if (args.empty() && cnt)
 		temp = RPL_MODE_NOARG(client->getNickname(), client->getUsername(), client->getHostname(), channelName, modes);
-	else
+	else if (cnt)
 		temp = RPL_MODE(client->getNickname(), client->getUsername(), client->getHostname(), channelName, modes, args);
-	client->sendMsgToChannel(temp, ch);
-	client->sendMsg(temp);
+	if (cnt){
+		client->sendMsgToChannel(temp, ch);
+		client->sendMsg(temp);
+	}
 }
 
 void Server::mode(Client *client, Message *msg)
