@@ -92,6 +92,22 @@ void Server::channelModes(Client *client, Message *msg) {
 			args += msg->params[arg_n] + " ";
 			++arg_n;
 		break;
+		case 'k':
+			if (msg->params.size() < arg_n + 1)
+			{
+				client->sendMsg(ERR_NONICK(nick,channelName));
+				break;
+			}
+			if (sign == '+'){
+				ch->setMode('k');
+				ch->setChannelPassword(msg->params[arg_n]);
+				args += msg->params[arg_n] + " ";
+				++arg_n;
+			}
+			else if (sign == '-') {
+				ch->unSetMode('k');
+			}
+		break;
 
 		default:
 			error = *isBegin;

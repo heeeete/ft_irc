@@ -59,6 +59,7 @@ public:
 
 	bool	isOperator(Client *client);
 	bool	isInvited(Client *client) const;
+	bool	isValidKey(std::string ps) const;
 };
 
 #endif
