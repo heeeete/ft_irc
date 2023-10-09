@@ -28,7 +28,6 @@ void Server::part(Client *client, Message *msg)
 	std::string			channelName;
 	while (std::getline(ss, channelName, ','))
 	{
-        std::cout << channelName << "\n";
         Channel *ch = getChannel(channelName);
 		if (!ch)    // 해당 채널이 존재하는가
 			client->sendMsg(ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
@@ -37,8 +36,8 @@ void Server::part(Client *client, Message *msg)
         else
 		{
             std::string part_msg = getPartMsg(msg);
-            client->sendMsg(RPL_PART(client->getNickname(), client->getUsername(), client->getHostname() , channelName, part_msg));
-            client->sendMsgToChannel(RPL_PART(client->getNickname(), client->getUsername(), client->getHostname() , channelName, part_msg), ch);
+            client->sendMsg(RPL_PART(client->getNickname(), client->getUsername(), client->getHostname(), channelName, part_msg));
+            client->sendMsgToChannel(RPL_PART(client->getNickname(), client->getUsername(), client->getHostname(), channelName, part_msg), ch);
             ch->removeClient(client);
             client->delJoinedChannel(ch);
             if (ch->getClients().empty())  // 채널 안에 클라이언트가 0명일 때

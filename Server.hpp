@@ -63,12 +63,12 @@ public:
 	// 예외 클래스 - 예외 생기면 던지기
 	class ServerException : public std::exception
 	{
-	private:
-		std::string msg;
-	public:
-		ServerException(std::string msg) : msg(msg) {}
-		~ServerException() throw() {}
-		const char *what() const throw() { return msg.c_str(); }
+		private:
+			std::string msg;
+		public:
+			ServerException(std::string msg) : msg(msg) {}
+			~ServerException() throw() {}
+			const char *what() const throw() { return msg.c_str(); }
 	};
 };
 

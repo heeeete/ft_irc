@@ -22,7 +22,6 @@ void Server::join(Client *client, Message *msg)
 			client->sendMsg(ERR_NOSUCHCHANNEL(nick, channelName));
 			continue;
 		}
-		std::cout << "채널 이름 : " << channelName << "\n";
 		createChannel(client, channelName); // 채널 없으면 채널 만듦
 		Channel *ch = getChannel(channelName);
 		if (!ch)
@@ -44,10 +43,9 @@ void Server::join(Client *client, Message *msg)
 			if (ch->hasClient(client))												//이미 있는 유저인지 확인
 				return (client->sendMsg(ERR_USERONCHANNEL(nick, nick, channelName)));
 			ch->addClient(client);
-			std::cout << nick << ' ' << ch->getName() << "접속\n";
 		}
-		client->sendMsgToChannel(USER_JOIN(nick, client->getUsername(), client->getHostname(), ch->getName()), ch);
-		client->sendMsg(USER_JOIN(nick, client->getUsername(), client->getHostname(), ch->getName()));
+		client->sendMsgToChannel(RPL_JOIN(nick, client->getUsername(), client->getHostname(), ch->getName()), ch);
+		client->sendMsg(RPL_JOIN(nick, client->getUsername(), client->getHostname(), ch->getName()));
 		//REPLY
 		if (!ch->getTopic().empty())
 			client->sendMsg(RPL_TOPIC(client->getNickname(), channelName, ch->getTopic()));
