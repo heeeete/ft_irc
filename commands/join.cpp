@@ -50,6 +50,8 @@ void Server::join(Client *client, Message *msg)
 		client->sendMsgToChannel(USER_JOIN(nick, client->getUsername(), client->getHostname(), ch->getName()), ch);
 		client->sendMsg(USER_JOIN(nick, client->getUsername(), client->getHostname(), ch->getName()));
 		//REPLY
+		if (!ch->getTopic().empty())
+			client->sendMsg(RPL_TOPIC(client->getNickname(), channelName, ch->getTopic()));
 		client->sendMsg(RPL_NAMREPLY(nick, ch->getName(), ch->getClientsName()));
 		client->sendMsg(RPL_ENDOFNAMES(nick, ch->getName()));
 	}

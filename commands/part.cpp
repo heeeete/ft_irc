@@ -11,7 +11,7 @@ static int checkJoinedChannels(Client* client, std::string &channelName)
     return (0);
 }
 
-static std::string getPartMsg(Message *msg)
+std::string getPartMsg(Message *msg)
 {
     std::string m = "See ya!";
 	if (msg->params.size() == 1) // PART_MSG not_defined
@@ -43,10 +43,6 @@ void Server::part(Client *client, Message *msg)
             client->delJoinedChannel(ch);
             if (ch->getClients().empty())  // 채널 안에 클라이언트가 0명일 때
                 delChannel(channelName);
-            // else if (!ch->getOperators().size()) {    // 채널 안에 operator가 없을 때
-            //     ch->removeAllClient();
-            //     delChannel(channelName);
-            // }
         }
     }
 }
