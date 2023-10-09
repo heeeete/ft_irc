@@ -21,7 +21,7 @@ private:
 
 	std::string _topic;
 	std::string _channelPassword;
-	int _userLimit;
+	size_t _userLimit;
 
 public:
 	Channel(Client* owner, const std::string& channelName);
@@ -29,6 +29,7 @@ public:
 
 	// getter
 	std::string getName() const;
+	std::string getModes() const;
 	std::vector<Client *> getClients() const;
 	std::vector<Client *> getOperators() const;
 	std::vector<std::string> getKickedUsers() const;
@@ -36,19 +37,21 @@ public:
 	std::vector<std::string> getVoicedUsers() const;
 	std::string getTopic() const;
 	std::string getChannelPassword() const;
-	int getUserLimit() const;
+	size_t getUserLimit() const;
 
 
 	// setter
 	void setTopic(std::string topic);
-	char setMode(char mode);
+	int setMode(char mode);
+	int unSetMode(char mode);
 	void setChannelPassword(std::string password);
-	void setCapacityLimit(int limit);
+	void setUserLimit(std::string limit);
 
 	bool	hasMode(char mode) const;
 	bool	hasClient(Client *client) const;
 
 	std::string getClientsName(); // 채널에 속한 클라이언트 이름들 가공
+	void addOperator(Client* client);
 	void addClient(Client *client);
 	void addInviteds(Client *client);
 	void removeClient(Client *client);

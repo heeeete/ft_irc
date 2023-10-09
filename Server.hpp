@@ -54,6 +54,7 @@ public:
 	void 		createChannel(Client *owner, const std::string& channelName);
 	void 		delChannel(const std::string& channelName);
 	Channel 	*getChannel(const std::string channelName);
+	void		channelModes(Client *client, Message *msg);
 
 	// Client 관련 함수
 	Client *getClient(const std::string& nickname);

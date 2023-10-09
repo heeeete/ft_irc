@@ -5,6 +5,7 @@ Channel::Channel(Client* owner, const std::string& channelName)
 Channel::~Channel() {};
 
 std::string Channel::getName() const { return _name; }
+std::string Channel::getModes() const { return _modes; }
 std::vector<Client *> Channel::getClients() const {return _clients; }
 std::vector<Client *> Channel::getOperators() const {return _operators; }
 std::vector<std::string> Channel::getKickedUsers() const { return _kickedUsers; }
@@ -12,7 +13,7 @@ std::vector<std::string> Channel::getBannedUsers() const { return _bannedUsers; 
 std::vector<std::string> Channel::getVoicedUsers() const { return _voicedUsers; }
 std::string Channel::getTopic() const { return _topic; }
 std::string Channel::getChannelPassword() const { return _channelPassword; }
-int Channel::getUserLimit() const { return _userLimit; }
+size_t Channel::getUserLimit() const { return _userLimit; }
 
 bool Channel::hasMode(char mode) const {
 	if (_modes.find(mode) == std::string::npos)//no encontramos el char
@@ -33,15 +34,31 @@ bool	Channel::hasClient(Client *client) const {
 }
 
 void Channel::setTopic(std::string topic) { _topic = topic; }
-char Channel::setMode(char mode) {
+int Channel::setMode(char mode) {
 	if (hasMode(mode))
-		return 0;
+		return -1;
 	else
 		_modes.push_back(mode);
-	return mode;
+	return static_cast<char>(mode);
+}
+int	Channel::unSetMode(char mode)
+{
+	if (hasMode(mode))
+	{
+	    _modes.erase(_modes.find(mode), 1);
+		return static_cast<char>(mode);
+	}
+	else
+		return -1;
 }
 void Channel::setChannelPassword(std::string password) { _channelPassword = password; }
-void Channel::setCapacityLimit(int limit) { _userLimit = limit; }
+void Channel::setUserLimit(std::string limit) {
+	std::stringstream ss;
+	size_t val;
+	ss << limit;
+	ss >> val;
+	_userLimit = val;
+	}
 
 std::string Channel::getClientsName()
 {
@@ -55,6 +72,10 @@ std::string Channel::getClientsName()
 		iter++;
 	}
 	return names;
+}
+
+void Channel::addOperator(Client* client) {
+	_operators.push_back(client);
 }
 
 void Channel::addClient(Client *client)
@@ -79,6 +100,8 @@ void Channel::removeClient(Client *client)
     if (isOperator(client))
         removeOperator(client);
 }
+
+
 
 void Channel::removeOperator(Client *client)
 {
