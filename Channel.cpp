@@ -140,3 +140,9 @@ bool	Channel::isInvited(Client *client) const {
 	}
 	return false;
 }
+
+bool	Channel::isValidKey(std::string ps) const {
+	if (_channelPassword != ps)
+		return false;
+	return true;
+}

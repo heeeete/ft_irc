@@ -79,6 +79,7 @@
 # define ERR_CHANOPRIVSNEEDED(nick, channelName)					":PPL_IRC 482 " + nick + " " + channelName + " :You're not channel operator\r\n"
 # define ERR_NOLIMIT(nick, channelName) 							":PPL_IRC 696 " + nick + " " + channelName + " l * :You must specify a parameter for the limit mode. Syntax: <limit>.\r\n"
 # define ERR_NONICK(nick, channelName) 								":PPL_IRC 696 " + nick + " " + channelName + " l * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n"
+# define ERR_NOKEY(nick, channelName) 								":PPL_IRC 696 " + nick + " " + channelName + " l * :You must specify a parameter for the key mode. Syntax: <key>.\r\n"
 //:irc.local 482 qwe #123 :You must be a channel operator
 
 #endif
