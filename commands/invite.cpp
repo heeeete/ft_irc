@@ -26,6 +26,9 @@ static bool alreadyExists(Client* toInvite, Message* msg) {
 
 void Server::invite(Client *client, Message *msg)
 {
+	if (!client->isRegistered())
+		client->sendMsg(ERR_NOTREGISTERED);
+		
 	if (msg->params.size() < 2)
 		return (client->sendMsg(ERR_NEEDMOREPARAMS(client->getNickname(), msg->command[0])));
 

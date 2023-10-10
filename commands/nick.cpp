@@ -16,6 +16,7 @@ static bool	validNickName(std::string nickname)
 
 void Server::nick(Client *client, Message *msg)
 {
+		
 	std::string currNickname = client->getNickname();
 
 	if (!client->hasValidPassword()) // PASS 틀린 경우, 없는 경우

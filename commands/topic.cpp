@@ -2,6 +2,9 @@
 
 void Server::topic(Client *client, Message *msg)
 {
+	if (!client->isRegistered())
+		client->sendMsg(ERR_NOTREGISTERED);
+		
     if (msg->params.empty())
 		return (client->sendMsg(ERR_NEEDMOREPARAMS(client->getNickname(), msg->command[0])));
     

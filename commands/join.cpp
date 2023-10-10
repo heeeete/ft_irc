@@ -4,6 +4,9 @@
 
 void Server::join(Client *client, Message *msg)
 {
+	if (!client->isRegistered())
+		client->sendMsg(ERR_NOTREGISTERED);
+		
 	std::string			nick = client->getNickname();
 	if (msg->params.empty())
 		client->sendMsg(ERR_NEEDMOREPARAMS(nick, msg->command));

@@ -2,6 +2,9 @@
 
 void Server::privmsg(Client *client, Message *msg)
 {
+	if (!client->isRegistered())
+		client->sendMsg(ERR_NOTREGISTERED);
+		
 	if (msg->params.size() != 2) // 파라미터가 제대로 안들어온 경우 그냥 return -> 이런 경우 없음
 		return ;
 	std::string receiver = msg->params[0]; // 보낼 채널 또는 유저

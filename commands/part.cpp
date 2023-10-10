@@ -21,6 +21,9 @@ static std::string getPartMsg(Message *msg)
 
 void Server::part(Client *client, Message *msg)
 {
+	if (!client->isRegistered())
+		client->sendMsg(ERR_NOTREGISTERED);
+		
     if (msg->params.empty())
 		client->sendMsg(ERR_NEEDMOREPARAMS(client->getNickname(), msg->command[0]));
 

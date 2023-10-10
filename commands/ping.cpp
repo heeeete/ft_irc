@@ -2,6 +2,9 @@
 
 void Server::ping(Client *client, Message *msg)
 {
+	if (!client->isRegistered())
+		client->sendMsg(ERR_NOTREGISTERED);
+		
     if (msg->params.empty())
         client->sendMsg(ERR_NOORIGIN);
     else

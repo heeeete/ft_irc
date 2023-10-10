@@ -2,6 +2,9 @@
 
 void Server::notice(Client *client, Message *msg)
 {
+	if (!client->isRegistered())
+		client->sendMsg(ERR_NOTREGISTERED);
+		
 	if (msg->params.empty())
 		return;
 	else if (msg->params.size() == 1)// 메세지 내용 없음
