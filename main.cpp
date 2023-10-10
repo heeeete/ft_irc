@@ -20,8 +20,8 @@ static bool isArgumentValid(int argc, char *argv[])
 
 	// [PORT]의 범위 확인 
 	unsigned int port = atoi(argv[1]);
-	if (port < 0 || port > 65535) {
-        std::cout << "Argument ERROR : Out range of port num (0~65535)\n";
+	if (port < 6665 || port > 6669) {
+        std::cout << "Argument ERROR : Out range of port num (6665~6669)\n";
         return (false);
     }
 	return (true);

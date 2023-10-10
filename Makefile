@@ -1,7 +1,7 @@
 CXX = c++
 
 CXXFLAGS 	= -std=c++98
-OPT			= -pedantic -Wfatal-errors
+OPT			= -Wall -Werror -Wextra
 
 NAME = ircserv
 
