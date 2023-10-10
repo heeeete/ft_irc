@@ -4,7 +4,10 @@ Client::Client(int clientSocket) : _clientSocket(clientSocket)
 {
 	_nickname = "*";
 	_hasValidPassword = false;
+	_isNicknameRegistered = false;
+	_isUserinfoRegistered = false;
 	_isRegistered = false;
+	_shouldBeDeleted = false;
 }
 
 // readBuf 관련 함수
