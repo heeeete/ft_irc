@@ -48,7 +48,6 @@ public:
 	void    privmsg(Client *client, Message *msg);
 	void    notice(Client *client, Message *msg);
 	void    ping(Client *client, Message *msg);
-	void	cap(Client *client);
 
 	// 채널 관련 함수
 	void 		createChannel(Client *owner, const std::string& channelName);

@@ -5,7 +5,7 @@ void Server::privmsg(Client *client, Message *msg)
 	if (!client->isRegistered())
 		client->sendMsg(ERR_NOTREGISTERED);
 		
-	if (msg->params.size() != 2) // 파라미터가 제대로 안들어온 경우 그냥 return -> 이런 경우 없음
+	if (msg->params.size() != 2) // 파라미터가 제대로 안들어온 경우 그냥 return
 		return ;
 	std::string receiver = msg->params[0]; // 보낼 채널 또는 유저
 	std::string toSend = msg->params[1]; // 보낼 메시지
@@ -21,7 +21,7 @@ void Server::privmsg(Client *client, Message *msg)
 			return ;
 		}
 		Channel *channel = getChannel(receiver); //	채널 찾기
-		if (!channel) //채널 없는 경우 (이런 경우 없음)
+		if (!channel) //채널 없는 경우
 			throw ServerException("Can't find channel!!");
 		else
 			client->sendMsgToChannel(reply, channel); // 채널 클라이언트들한테 메시지 보내기 

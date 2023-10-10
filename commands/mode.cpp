@@ -47,7 +47,7 @@ void Server::channelModes(Client *client, Message *msg) {
 	std::string set;
 	std::string args;
 	std::string error;
-	std::string::iterator isBegin = modes.begin() + 1;	// +nt 면 n 부터 시작
+	std::string::iterator isBegin = modes.begin() + 1;
 	Client *oper = NULL;
 	if (modes[0] == '-' || modes[0] == '+')
 		set += modes[0];

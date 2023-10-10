@@ -11,7 +11,7 @@ void Server::notice(Client *client, Message *msg)
 		return;
 
 	Client	*target = getClient(msg->params[0]);
-	if (target == NULL)//no esta ese nick
+	if (target == NULL)
 		return;
 	else
 		client->sendMsgClient(RPL_PRIVMSG(client->getNickname(), client->getUsername(), client->getHostname(), msg->params[0], msg->params[1]), target);

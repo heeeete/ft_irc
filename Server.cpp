@@ -157,11 +157,11 @@ void Server::executeCmd(Client *client, Message *msg)
 {
 	std::string validCmds[] = {
 		"NICK", "USER", "PASS", "JOIN", "KICK", "INVITE", "TOPIC",
-		"MODE", "PART", "QUIT", "PRIVMSG", "NOTICE", "PING", "CAP"
+		"MODE", "PART", "QUIT", "PRIVMSG", "NOTICE", "PING"
 	};
 
 	int index = 0;
-	while (index < 14 && validCmds[index] != msg->command)
+	while (index < 13 && validCmds[index] != msg->command)
 		index++;
 
 	switch(index) {
@@ -178,7 +178,6 @@ void Server::executeCmd(Client *client, Message *msg)
 		case 10: privmsg(client, msg); break;
 		case 11: notice(client, msg); break;
 		case 12: ping(client, msg); break;
-		case 13: cap(client); break;
 		default: break; //맞는 command 없을 때
 	}
 
@@ -223,7 +222,7 @@ void Server::createChannel(Client *owner, const std::string& channelName)
 	}
 	try
 	{
-		Channel *newChannel = new Channel(owner, channelName); // 채널 나중에 없앨 때 delete 해주기
+		Channel *newChannel = new Channel(owner, channelName);
 		_channelList.push_back(newChannel);
 		std::cout << channelName << " 채널이 만들어졌습니다." << std::endl;
 	}
@@ -240,8 +239,8 @@ void Server::delChannel(const std::string& channelName)
 	{
 		if ((*it)->getName() == channelName)
 		{
-			_channelList.erase(it);
 			delete (*it);
+			_channelList.erase(it);
 			return ;
 		}
 	}
@@ -279,8 +278,8 @@ void    Server::delClient(Client* client)
 	{
 		if (it->second == client)
 		{
-			_clientList.erase(it);
 			delete (it->second);
+			_clientList.erase(it);
 			return ;
 		}
 	}

@@ -1,7 +1,7 @@
 CXX = c++
 
 CXXFLAGS 	= -std=c++98
-OPT			= -Wall -Werror -Wextra
+OPT			= -Wall -Werror -Wextra -g -fsanitize=address
 
 NAME = ircserv
 
@@ -11,8 +11,7 @@ SRC = main.cpp \
 		parsing.cpp \
 		Channel.cpp \
 
-SRC_CMD = 	commands/cap.cpp \
-			commands/pass.cpp \
+SRC_CMD = 	commands/pass.cpp \
 			commands/nick.cpp \
 			commands/user.cpp \
 			commands/join.cpp \
