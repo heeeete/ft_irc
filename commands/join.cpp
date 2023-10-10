@@ -5,30 +5,25 @@
 void Server::join(Client *client, Message *msg)
 {
 	if (!client->isRegistered())
-		client->sendMsg(ERR_NOTREGISTERED);
+		return (client->sendMsg(ERR_NOTREGISTERED));
 		
 	std::string			nick = client->getNickname();
 	if (msg->params.empty())
-		client->sendMsg(ERR_NEEDMOREPARAMS(nick, msg->command));
+		return (client->sendMsg(ERR_NEEDMOREPARAMS(nick, msg->command)));
 
 	std::stringstream	ss(msg->params[0]);
 	std::string			channelName;
 	while (std::getline(ss, channelName, ','))
 	{
 		if (client->getJoinedChannels().size() >= MAX_JOINED_CHANNEL)
-		{
-			client->sendMsg(ERR_TOOMANYCHANNELS(nick, channelName));
-			return ;
-		}
-		if ((channelName[0] != '&' && channelName[0] != '#') || channelName.length() > 200 || channelName.find(" ") != std::string::npos )
-		{
+			return (client->sendMsg(ERR_TOOMANYCHANNELS(nick, channelName)));
+		if ((channelName[0] != '&' && channelName[0] != '#') || channelName.length() > 200 || channelName.find(" ") != std::string::npos ) {
 			client->sendMsg(ERR_NOSUCHCHANNEL(nick, channelName));
 			continue;
 		}
 		createChannel(client, channelName); // 채널 없으면 채널 만듦
 		Channel *ch = getChannel(channelName);
-		if (!ch)
-		{
+		if (!ch) {
 			std::cerr << channelName << " 채널이 만들어지지 않았습니다." << std::endl;
 			return ;
 		}

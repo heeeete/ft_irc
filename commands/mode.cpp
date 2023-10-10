@@ -155,7 +155,7 @@ void Server::channelModes(Client *client, Message *msg) {
 void Server::mode(Client *client, Message *msg)
 {
 	if (!client->isRegistered())
-		client->sendMsg(ERR_NOTREGISTERED);
+		return (client->sendMsg(ERR_NOTREGISTERED));
 		
 	std::string nick = client->getNickname();
 	if (msg->params.empty())
