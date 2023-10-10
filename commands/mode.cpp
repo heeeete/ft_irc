@@ -142,7 +142,6 @@ void Server::channelModes(Client *client, Message *msg) {
 
 	std::string	sendMsg;
 	parseModes(set);
-	std::cout << "MODE ================  " << set << "\n";
 	if (args.empty() && !set.empty())
 		sendMsg = RPL_MODE_NOARG(client->getNickname(), client->getUsername(), client->getHostname(), channelName, set);
 	else if (!set.empty())
