@@ -14,17 +14,17 @@ static bool	validNickName(std::string nickname)
 	return true;
 }
 
-void Server::nick(Client *client, Message *msg) 
+void Server::nick(Client *client, Message *msg)
 {
 	std::string currNickname = client->getNickname();
 
-	if (!client->hasValidPassword()) // PASS 틀린 경우, 없는 경우 
+	if (!client->hasValidPassword()) // PASS 틀린 경우, 없는 경우
 	{
 		client->setShouldBeDeleted(true);
 		return ;
 	}
 
-	if (msg->params.empty()) // 변경하려는 닉네임 비어있을 때 - 등록된 계정에서 실험해보기 
+	if (msg->params.empty()) // 변경하려는 닉네임 비어있을 때 - 등록된 계정에서 실험해보기
 	{
 		client->sendMsg(ERR_NONICKNAMEGIVEN(currNickname));
 		return ;
@@ -34,10 +34,11 @@ void Server::nick(Client *client, Message *msg)
 	if (!validNickName(newNickname)) // 닉네임 유효하지 않을 때
 		client->sendMsg(ERR_ERRONEUSNICKNAME(currNickname, newNickname));
 	else if (currNickname != newNickname && nicknameDupCheck(newNickname)) // 닉네임 중복인 경우
-		client->sendMsg(ERR_NICKNAMEINUSE(currNickname, newNickname)); // 아마 NICK을 다시 보내주는데 등록된 계정에서는 실험해봐야 함 
+		client->sendMsg(ERR_NICKNAMEINUSE(currNickname, newNickname)); // 아마 NICK을 다시 보내주는데 등록된 계정에서는 실험해봐야 함
 	else
 	{
 		client->setNickname(newNickname);
 		client->setIsNicknameRegistered(true);
+		client->sendMsg(RPL_NICK(client->getNickname(), client->getUsername(), client->getHostname(), newNickname));
 	}
 }

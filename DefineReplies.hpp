@@ -36,6 +36,9 @@
 # define RPL_MODE_NOARG(nick, userName, hostName, channel, modes)		":" + nick + "!" + userName + "@" + hostName + " " + "MODE " + channel + " :" + modes + "\r\n"
 # define RPL_MODE(nick, userName, hostName, channel, modes, arg)		":" + nick + "!" + userName + "@" + hostName + " " + "MODE " + channel + " " + modes + " :" + args + "\r\n"
 
+/* NICK */
+# define RPL_NICK(nick, userName, hostName, newNick)					":" + nick + "!" + userName + "@" + hostName + " " + "NICK :" + newNick + "\r\n"
+
 /* NOTICE */
 # define RPL_NOTICE(nick, userName, hostName, receiver, msg)			":" + nick + "!" + userName + "@" + hostName + " " + "NOTICE " + receiver + " :" + msg + "\r\n"
 
