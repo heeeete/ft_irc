@@ -71,8 +71,15 @@ std::string Channel::getClientsName()
 	return names;
 }
 
-void Channel::addOperator(Client* client) {
+bool Channel::addOperator(Client* client) {
+	std::vector<Client*>::iterator isBegin = _operators.begin();
+	while (isBegin != _operators.end()){
+		if ((*isBegin) == client)
+			return false;
+		isBegin++;
+	}
 	_operators.push_back(client);
+	return true;
 }
 
 void Channel::addClient(Client *client)
@@ -100,16 +107,17 @@ void Channel::removeClient(Client *client)
 
 
 
-void Channel::removeOperator(Client *client)
+bool Channel::removeOperator(Client *client)
 {
 	for (std::vector<Client *>::iterator iter = _operators.begin(); iter != _operators.end(); ++iter)
 	{
         if ((*iter) == client)
 		{
             _operators.erase(iter);
-			return ;
+			return true;
 		}
     }
+	return false;
 }
 
 bool Channel::isOperator(Client *client)

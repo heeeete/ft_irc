@@ -44,11 +44,11 @@ public:
 	bool	hasClient(Client *client) const;
 
 	std::string getClientsName(); // 채널에 속한 클라이언트 이름들 가공
-	void addOperator(Client* client);
 	void addClient(Client *client);
 	void addInviteds(Client *client);
 	void removeClient(Client *client);
-	void removeOperator(Client* client);
+	bool addOperator(Client* client);
+	bool removeOperator(Client* client);
 
 	bool	isOperator(Client *client);
 	bool	isInvited(Client *client) const;
