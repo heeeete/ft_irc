@@ -15,9 +15,7 @@ private:
 	std::string _hostname;
 	std::string _username;
 	std::string _realname;
-
 	std::string _readBuf;
-	std::string _writeBuf;
 
 	bool _hasValidPassword; // 유효한 비밀번호를 가지고 있는지
 	bool _isNicknameRegistered; // 닉네임 등록됐는지
