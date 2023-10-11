@@ -22,7 +22,7 @@ private:
 
 	// 여러 util 함수들
 	void addClient();
-	void closeClient(int pollIdx);
+	void closeClient(int pollIdx, std::string quit_msg);
 	void handleReceivedData(int pollIdx);
 	void processBuffer(Client *client);
 	void executeCmd(Client *client, Message *msg);

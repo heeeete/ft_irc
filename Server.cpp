@@ -60,10 +60,7 @@ void Server::run()
 					break ;
 				}
 				else if (_pollFd[i].fd != -1 && (_pollFd[i].revents & (POLLERR | POLLHUP | POLLNVAL))) // 클라이언트 소켓이 닫힌 경우
-				{
-					std::cout << "종료 감지\n";
-					closeClient(i);
-				}
+					closeClient(i, "종료 감지\n");
 			}
 		}
 	}
@@ -305,7 +302,7 @@ void    Server::delClient(Client* client)
 	}
 }
 
-void	Server::closeClient(int pollIdx)
+void	Server::closeClient(int pollIdx, std::string quit_msg)
 {
 	Client *client = getClient(_pollFd[pollIdx].fd); // 해당 클라이언트 가져오기
 
@@ -313,7 +310,6 @@ void	Server::closeClient(int pollIdx)
 	std::vector<Channel *> channels = client->getJoinedChannels();
 	std::vector<std::string> channelToDelete;
 	std::vector<Channel *>::iterator iter = channels.begin();
-	std::string quit_msg = "See ya!";
     for ( ; iter != channels.end(); ++iter)  // 해당 클라이언트가 속해있는 채널들
 	{
 		(*iter)->removeClient(client);          // 채널에서 클라이언트 제거
