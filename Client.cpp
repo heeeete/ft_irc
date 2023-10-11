@@ -58,8 +58,22 @@ void Client::delJoinedChannel(Channel *channel)
 // 클라이언트한테 메시지 보내기
 void Client::sendMsg(std::string msg)
 {
-	if (send(_clientSocket, msg.c_str(), msg.length(), 0) < 0)
-		perror("send failed");
+	ssize_t cnt = 0;
+	int a = 0;
+	while (1){
+		std::cout << "1\n";
+		cnt = send(_clientSocket, msg.c_str(), msg.length(), 0);
+		a += cnt;
+		if (cnt < 0) {
+			perror("send failed");
+			break;
+		}
+		else if (msg.find(END_CHARACTERS, 0) == std::string::npos){
+			msg.erase(0, cnt);
+		}
+		else break;
+	}
+	std::cout << "보낸 글자 = "<< a << "\n";
 	std::cout << "========== send client " << _clientSocket << " ==========\n";
 	std::cout << msg << "\n\n";
 }
