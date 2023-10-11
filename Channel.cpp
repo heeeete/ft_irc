@@ -13,7 +13,7 @@ std::string Channel::getChannelPassword() const { return _channelPassword; }
 size_t Channel::getUserLimit() const { return _userLimit; }
 
 bool Channel::hasMode(char mode) const {
-	if (_modes.find(mode) == std::string::npos)//no encontramos el char
+	if (_modes.find(mode) == std::string::npos)
 		return (false);
 	return (true);
 }

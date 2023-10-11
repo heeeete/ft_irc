@@ -61,7 +61,6 @@ void Client::sendMsg(std::string msg)
 	ssize_t cnt = 0;
 	int a = 0;
 	while (1){
-		std::cout << "1\n";
 		cnt = send(_clientSocket, msg.c_str(), msg.length(), 0);
 		a += cnt;
 		if (cnt < 0) {
@@ -73,9 +72,6 @@ void Client::sendMsg(std::string msg)
 		}
 		else break;
 	}
-	std::cout << "보낸 글자 = "<< a << "\n";
-	std::cout << "========== send client " << _clientSocket << " ==========\n";
-	std::cout << msg << "\n\n";
 }
 
 void	Client::sendMsgClient(std::string msg, Client *target)

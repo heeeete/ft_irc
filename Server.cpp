@@ -92,7 +92,7 @@ void Server::addClient()
 			_pollFd[i].events = POLLIN;
 			_pollFd[i].revents = 0;
 			client->setPollFdIdx(i);
-			std::cout << "connection successful\n";
+
 			break;
 		}
 	}
@@ -101,8 +101,6 @@ void Server::addClient()
 // 클라이언트로부터 데이터 받아서 처리
 void Server::handleReceivedData(int pollIdx)
 {
-	std::cout << "클라이언트 이벤트 발생!!\n";
-
 	char buf[1024];
 	ssize_t bytesReceived = recv(_pollFd[pollIdx].fd, buf, sizeof(buf) - 1, 0);
 	if (bytesReceived <= 0) // 연결 종료 혹은 오류 발생
@@ -118,10 +116,7 @@ void Server::handleReceivedData(int pollIdx)
 		currClient->setReadBuf(buf);
 
 		if (currClient->getReadBuf().find(END_CHARACTERS) != std::string::npos)
-		{
-			std::cout << "받은 글자 = " << currClient->getReadBuf().size() << "\n";
 			processBuffer(currClient);
-		}
 	}
 
 }
@@ -132,12 +127,10 @@ void Server::processBuffer(Client *client)
 	std::string buf = client->getReadBuf();
 	if (buf.find_first_of(VALID_CHARACTERS) == std::string::npos)
 		return ;
-	std::cout << "BUF = " << buf << "\n";
 
 	char *token = strtok(const_cast<char *>(buf.c_str()), END_CHARACTERS);
 	if (token == NULL)
 		return ;
-	std::cout << "token = " << token << "\n";
 	while (token != NULL)
 	{
 		std::string command(token);
