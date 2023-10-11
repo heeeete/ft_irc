@@ -39,6 +39,8 @@ void Server::channelModes(Client *client, Message *msg) {
 	if (msg->params.size() == 1)
 		return (client->sendMsg(RPL_CHANNELMODEIS(nick, channelName, ch->getModes())));
 	std::string modes = msg->params[1];
+	if (modes.size() == 1)
+		return ;
 	if (!ch->isOperator(client))
 		return (client->sendMsg(ERR_CHANOPRIVSNEEDED(nick, channelName)));
 

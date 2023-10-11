@@ -72,6 +72,8 @@ void Client::sendMsg(std::string msg)
 		}
 		else break;
 	}
+	std::cout << "========== send client " << _clientSocket << " ==========\n";
+	std::cout << msg << "\n\n";
 }
 
 void	Client::sendMsgClient(std::string msg, Client *target)
