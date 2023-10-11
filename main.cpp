@@ -27,6 +27,14 @@ static bool isArgumentValid(int argc, char *argv[])
 	return (true);
 }
 
+bool server_shutdown = false;
+
+static void	signal_handler(int signal)
+{
+	(void)signal;
+	server_shutdown = true;
+}
+
 int main(int argc, char *argv[])
 {
 	if (!isArgumentValid(argc, argv))
@@ -35,6 +43,7 @@ int main(int argc, char *argv[])
 	int port = atoi(argv[1]);
 	std::string password = argv[2];
 
+	signal(SIGINT, signal_handler);
 	try 
 	{
 		Server server(port, password);
@@ -45,6 +54,6 @@ int main(int argc, char *argv[])
 		std::cerr << e.what() << std::endl;
 		return (EXIT_FAILURE);
 	}
-
+	
 	return (EXIT_SUCCESS);
 }

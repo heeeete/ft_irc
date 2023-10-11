@@ -6,6 +6,8 @@
 # include "Message.hpp"
 # include "DefineReplies.hpp"
 
+extern bool	server_shutdown;
+
 class Server
 {
 private:

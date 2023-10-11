@@ -39,12 +39,15 @@ Server::Server(int port, std::string password) :_port(port), _password(password)
 
 }
 
-Server::~Server() {}
+Server::~Server()
+{
+	std::cout << "Server is terminated.." << std::endl;
+}
 
 // 클라이언트 이벤트를 기다리고 처리
 void Server::run()
 {
-	while (1)
+	while (server_shutdown == false)
 	{
 		int result = poll(_pollFd, POLLFD_SIZE, -1);
 		if (result > 0)
