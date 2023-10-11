@@ -22,6 +22,7 @@ private:
 
 	// 여러 util 함수들
 	void addClient();
+	void closeClient(int pollIdx);
 	void handleReceivedData(int pollIdx);
 	void processBuffer(Client *client);
 	void executeCmd(Client *client, Message *msg);
@@ -57,6 +58,7 @@ public:
 
 	// Client 관련 함수
 	Client *getClient(const std::string& nickname);
+	Client *getClient(const int fd);
 	void	delClient(Client* client);
 
 	// 예외 클래스 - 예외 생기면 던지기

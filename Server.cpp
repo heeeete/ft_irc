@@ -47,7 +47,6 @@ void Server::run()
 	while (1)
 	{
 		int result = poll(_pollFd, POLLFD_SIZE, -1);
-
 		if (result > 0)
 		{
 			for (int i = 0; i < POLLFD_SIZE; i++)
@@ -58,6 +57,12 @@ void Server::run()
 						addClient();
 					else
 						handleReceivedData(i);
+					break ;
+				}
+				else if (_pollFd[i].fd != -1 && (_pollFd[i].revents & (POLLERR | POLLHUP | POLLNVAL))) // 클라이언트 소켓이 닫힌 경우 
+				{
+					std::cout << "종료 감지\n";
+					closeClient(i);
 				}
 			}
 		}
@@ -272,6 +277,18 @@ Client *Server::getClient(const std::string& nickname)
 	return (NULL);
 }
 
+Client *Server::getClient(const int fd)
+{
+	std::map<int, Client*>::iterator iter = _clientList.begin();
+	while (iter != _clientList.end())
+	{
+		if (iter->second->getClientSocket() == fd)
+			return (iter->second);
+		iter++;
+	}
+	return (NULL);
+}
+
 void    Server::delClient(Client* client)
 {
     for (std::map<int, Client *>::iterator it = _clientList.begin(); it != _clientList.end(); ++it)
@@ -283,4 +300,32 @@ void    Server::delClient(Client* client)
 			return ;
 		}
 	}
+}
+
+void	Server::closeClient(int pollIdx)
+{
+	Client *client = getClient(_pollFd[pollIdx].fd); // 해당 클라이언트 가져오기 
+
+	//채널 처리 
+	std::vector<Channel *> channels = client->getJoinedChannels();
+	std::vector<std::string> channelToDelete;
+	std::vector<Channel *>::iterator iter = channels.begin();
+	std::string quit_msg = "See ya!";
+    for ( ; iter != channels.end(); ++iter)  // 해당 클라이언트가 속해있는 채널들
+	{
+		(*iter)->removeClient(client);          // 채널에서 클라이언트 제거 
+		client->sendMsgToChannel(RPL_QUIT(client->getNickname(), client->getUsername(), client->getHostname(), quit_msg), *iter);
+        if ((*iter)->getClients().empty())      // 채널 안에 클라이언트가 0명일 때
+            channelToDelete.push_back((*iter)->getName()); //삭제할 채널 이름 저장
+    }
+	std::vector<std::string>::iterator chIter = channelToDelete.begin();
+	for (; chIter != channelToDelete.end(); ++chIter)
+		delChannel(*chIter);
+
+	// pollFd 처리 
+	close(_pollFd[pollIdx].fd);
+	_pollFd[pollIdx].fd = -1;
+	delClient(client); 
+
+	std::cout << "클라이언트 소켓 종료 감지 후 클라이언트 수: " << _clientList.size() << '\n';
 }

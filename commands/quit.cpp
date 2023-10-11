@@ -27,4 +27,9 @@ void Server::quit(Client *client, Message *msg)
 		delChannel(*chIter);
 
     delClient(client);  // 서버에서 클라이언트 삭제
+
+	// 추가해준 부분 - pollFd 처리해주고 클라이언트 수 출력 
+	close(_pollFd[client->getPollFdIdx()].fd);
+	_pollFd[client->getPollFdIdx()].fd = -1;
+	std::cout << "Quit 후 클라이언트 수: " << _clientList.size() << '\n';
 }
